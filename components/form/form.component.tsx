@@ -4,8 +4,8 @@ import Alert from "../basic/alert.component";
 
 interface IProps {
   onSubmit?: Function;
-  children: ReactNode;
-  error: any;
+  children?: ReactNode;
+  error?: any;
 }
 
 const Form: FC<IProps> = ({ onSubmit, children, error }) => {
