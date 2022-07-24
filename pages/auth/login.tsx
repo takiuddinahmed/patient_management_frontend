@@ -1,21 +1,18 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useEffect, useState, FormEventHandler } from "react";
+import {
+  ILoginForm,
+  initialLoginFormData,
+  loginApi,
+} from "../../api_calls/user/login.api";
 import Button from "../../components/basic/button.component";
 import Form from "../../components/form/form.component";
 import InputField from "../../components/form/inputField.component";
 import Navbar from "../../components/layouts/navbar.component";
 
-interface ILoginForm {
-  username: string;
-  password: string;
-}
-
-const initialLoginFormData: ILoginForm = {
-  username: "",
-  password: "",
-};
-
 const Login = () => {
+  const router = useRouter();
   const [loginFormData, setLoginFormData] =
     useState<ILoginForm>(initialLoginFormData);
   const [error, setError] = useState<ILoginForm>(initialLoginFormData);
@@ -32,10 +29,10 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (loginFormData.username.length < 3) {
-      updateLoginFormError("username", "Username is too short.");
+    if (loginFormData.email.length < 3) {
+      updateLoginFormError("email", "Email is not valid.");
     } else {
-      updateLoginFormError("username", "");
+      updateLoginFormError("email", "");
     }
     if (loginFormData.password.length < 6) {
       updateLoginFormError("password", "Password is too short.");
@@ -44,9 +41,19 @@ const Login = () => {
     }
   }, [loginFormData]);
 
-  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
-    e.preventDefault();
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
+    // e.preventDefault();
     console.log(loginFormData);
+    try {
+      const data = await loginApi(loginFormData);
+      if (data) {
+        router.push("/");
+      } else {
+        alert("Unable to login");
+      }
+    } catch (err) {
+      alert("Unable to login");
+    }
   };
 
   return (
@@ -55,12 +62,12 @@ const Login = () => {
       <div className="m-6 h-full flex justify-center items-center">
         <Form onSubmit={handleSubmit}>
           <InputField
-            label="Username"
-            error={error.username}
-            placeholder="Username"
-            name="username"
-            value={loginFormData.username}
-            onChange={(e) => updateLoginForm("username", e.target.value)}
+            label="Email"
+            error={error.email}
+            placeholder="Email"
+            name="email"
+            value={loginFormData.email}
+            onChange={(e) => updateLoginForm("email", e.target.value)}
           />
           <InputField
             label="Password"
@@ -73,7 +80,7 @@ const Login = () => {
           />
           <div className="flex flex-row items-center justify-between">
             <div>
-              <Button>Login</Button>
+              <Button type="submit">Login</Button>
             </div>
             <div>
               <Link href={"/auth/register"}>

@@ -1,5 +1,11 @@
 import Link from "next/link";
+import Router, { useRouter } from "next/router";
 import { useEffect, useState, FormEventHandler } from "react";
+import {
+  initialLoginFormData,
+  IRegisterForm,
+  registerApi,
+} from "../../api_calls/user/register.api";
 import Button from "../../components/basic/button.component";
 import Form from "../../components/form/form.component";
 import InputField from "../../components/form/inputField.component";
@@ -8,26 +14,10 @@ import Main from "../../components/layouts/main.component";
 import Navbar from "../../components/layouts/navbar.component";
 import { role } from "../../interface/user.interface";
 
-interface IRegisterForm {
-  username: string;
-  password: string;
-  firstname: string;
-  lastname: string;
-  role: role | "";
-  card_id: string;
-}
-
-const initialLoginFormData: IRegisterForm = {
-  username: "",
-  password: "",
-  firstname: "",
-  lastname: "",
-  role: "",
-  card_id: "",
-};
 const roles = ["patient", "doctor", "lab", "pharmacy"];
 
 const Register = () => {
+  const router = useRouter();
   const [loginFormData, setLoginFormData] =
     useState<IRegisterForm>(initialLoginFormData);
   const [error, setError] = useState<IRegisterForm>(initialLoginFormData);
@@ -44,25 +34,35 @@ const Register = () => {
   };
 
   useEffect(() => {
-    if (loginFormData.username.length < 3) {
-      updateLoginFormError("username", "Username is too short.");
+    if (loginFormData.email.length < 3) {
+      updateLoginFormError("email", "Email is too short.");
     } else {
-      updateLoginFormError("username", "");
+      updateLoginFormError("email", "");
     }
     if (loginFormData.password.length < 6) {
       updateLoginFormError("password", "Password is too short.");
     } else {
       updateLoginFormError("password", "");
     }
-    if (!roles.some((role) => role == loginFormData.role)) {
-      updateLoginFormError("role", "Select a valid role");
+    if (!roles.some((role) => role == loginFormData.userRole)) {
+      updateLoginFormError("userRole", "Select a valid role");
     } else {
-      updateLoginFormError("role", "");
+      updateLoginFormError("userRole", "");
     }
   }, [loginFormData]);
 
-  const handleSubmit = () => {
-    console.log(loginFormData);
+  const handleSubmit = async () => {
+    try {
+      const result = await registerApi(loginFormData);
+      console.log(result);
+      if (result) {
+        router.push("/auth/login");
+      } else {
+        alert("Register Failed. Try again");
+      }
+    } catch (err) {
+      alert("Register Failed. Try again");
+    }
   };
 
   return (
@@ -71,30 +71,30 @@ const Register = () => {
         <Form onSubmit={handleSubmit} error={error}>
           <InputField
             label="First Name"
-            error={error.firstname}
+            error={error.firstName}
             placeholder="First Name"
             name="firstname"
-            value={loginFormData.firstname}
+            value={loginFormData.firstName}
             required
-            onChange={(e) => updateLoginForm("firstname", e.target.value)}
+            onChange={(e) => updateLoginForm("firstName", e.target.value)}
           />
           <InputField
             label="Last Name"
-            error={error.lastname}
+            error={error.lastName}
             placeholder="Last Name"
             name="lastname"
-            value={loginFormData.lastname}
+            value={loginFormData.lastName}
             required
-            onChange={(e) => updateLoginForm("lastname", e.target.value)}
+            onChange={(e) => updateLoginForm("lastName", e.target.value)}
           />
           <InputField
-            label="Username"
-            error={error.username}
-            placeholder="Username"
-            name="username"
-            value={loginFormData.username}
+            label="Email"
+            error={error.email}
+            placeholder="Email"
+            name="email"
+            value={loginFormData.email}
             required
-            onChange={(e) => updateLoginForm("username", e.target.value)}
+            onChange={(e) => updateLoginForm("email", e.target.value)}
           />
           <InputField
             label="Password"
@@ -108,10 +108,10 @@ const Register = () => {
           />
           <SelectField
             label="Role"
-            error={error.role}
+            error={error.userRole}
             name="role"
-            value={loginFormData.role}
-            onChange={(e) => updateLoginForm("role", e.target.value)}
+            value={loginFormData.userRole}
+            onChange={(e) => updateLoginForm("userRole", e.target.value)}
           >
             <option value="">Select Role</option>
             <option value="patient">Patient</option>
@@ -119,6 +119,21 @@ const Register = () => {
             <option value="lab">Lab</option>
             <option value="pharmacy">Pharmacy</option>
           </SelectField>
+
+          {loginFormData.userRole == "patient" ? (
+            <InputField
+              label="Card Id"
+              error={error.cardId || null}
+              placeholder="Card Id"
+              name="card_id"
+              value={loginFormData.cardId || ""}
+              required
+              onChange={(e) => updateLoginForm("cardId", e.target.value)}
+            />
+          ) : (
+            ""
+          )}
+
           <div className="flex flex-row items-center justify-between">
             <div>
               <Button type="submit">Register</Button>
