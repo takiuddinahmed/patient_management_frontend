@@ -37,7 +37,7 @@ const Home: NextPage = () => {
   return (
     <>
       <Navbar />
-      <div className="flex justify-center items-start  mt-40 h-screen w-screen ">
+      <div className="flex justify-center items-start   mt-40 h-screen ">
         <div className="h-[300px] w-[300px] bg-white shadow-md shadow-gray-600 flex flex-col gap-3 items-center justify-between py-20">
           {rfid ? (
             <div>
