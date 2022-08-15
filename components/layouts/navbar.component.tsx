@@ -1,6 +1,17 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { FC } from "react";
+import {
+  removeLocalHostData,
+  setLocalHostData,
+} from "../../utils/getLocalData.util";
 
-const Navbar = () => {
+interface IProps {
+  login?: boolean;
+}
+
+const Navbar: FC<IProps> = ({ login }) => {
+  const router = useRouter();
   return (
     <>
       <div>
@@ -81,19 +92,47 @@ const Navbar = () => {
               </div>
             </div>
             <div>
-              <Link
-                href={"/auth/login"}
+              {!login ? (
+              < {!login ? (
+              <a
+                href="/auth/login"
+                className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
               >
-
-                <span className="cursor-pointer inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0">
-                  Login
-                </span>
-
-              </Link>
-            </div>
+                Login
+              </a>
+              ) : (
+              <a
+                className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:cursor-pointer hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
+                onClick={() => {
+                  console.log("logout");
+                  removeLocalHostData("user");
+                  router.push("/auth/login");
+                }}
+              >
+                Logout
+              </a>
+            )}
+              href="/auth/login"
+              className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
+              >
+              Login
+            </a>
+            ) : (
+            <a
+              className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:cursor-pointer hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
+              onClick={() => {
+                console.log("logout");
+                removeLocalHostData("user");
+                router.push("/auth/login");
+              }}
+            >
+              Logout
+            </a>
+            )}
           </div>
         </div>
       </div>
+    </div>
 
 
 
