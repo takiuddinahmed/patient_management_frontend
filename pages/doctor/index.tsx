@@ -1,38 +1,44 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { IMedicine, initialPrescriptionForm, IObservation, IPrescriptionForm } from '../../api_calls/doctor/prescription.api';
+import AdviceField from '../../components/form/advice.component';
+import CcForm from '../../components/form/cc.component';
+import DiagnosisForm from '../../components/form/diagnosis.component';
+import InvestigationForm from '../../components/form/investigation.component';
+import OnExaminationForm from '../../components/form/oe.component';
+import RxForm from '../../components/form/rx.component';
 import Navbar from '../../components/layouts/navbar.component';
 
 
-const index = () => {
-    const [Name, setName] = useState('');
-    const [Frequency, setFrequency] = useState('');
-    const [Hour, setHour] = useState('');
-    const [Period, setPeriod] = useState(0);
-    const [Period2, setPeriod2] = useState('');
+const Index = () => {
 
 
+    const [prescriptionForm, setPrescriptionForm] = useState<IPrescriptionForm>(initialPrescriptionForm);
 
-
-
-
-
-    const HandelSubmit1 = (e) => {
-
-
-
-
+    const addToMedicine = (medicine: IMedicine) => {
+        setPrescriptionForm(prev => ({ ...prev, medicines: [...prev.medicines, medicine] }))
+    }
+    const addToComplaint = (complaint: string) => {
+        setPrescriptionForm(prev => ({ ...prev, complaints: [...prev.complaints, complaint] }))
+    }
+    const addToOnExamination = (examination: IObservation) => {
+        setPrescriptionForm(prev => ({ ...prev, observation: [...prev.observation, examination] }))
+    }
+    const addToInvestigation = (investigation: string) => {
+        setPrescriptionForm(prev => ({ ...prev, investigations: [...prev.investigations, investigation] }))
     }
 
-    let prescriptionArray = [
-        {
-            Name: 'Tab.Napa',
-            consumptionFrequency: '1+0+1',
-            consumptionHour: 'P.M',
-            consumptionPeriod: 7,
-            consumptionPeriod2: 'Days'
-        },
+    const addToDiagnosis = (diagnosis: string) => {
+        setPrescriptionForm(prev => ({ ...prev, diagnosis: [...prev.diagnosis, diagnosis] }))
+    }
 
-    ]
+    const addToAdvice = (advice: string) => {
+        setPrescriptionForm(prev => ({ ...prev, advices: [...prev.advices, advice] }))
+    }
 
+
+    useEffect(() => {
+        console.log({ prescriptionForm });
+    }, [prescriptionForm])
 
 
 
@@ -40,11 +46,87 @@ const index = () => {
     return (
         <>
             <Navbar></Navbar>
-            <div className="drawer drawer-mobile">
-                <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-                <div className="drawer-content ">
-                    <label htmlFor="my-drawer-2" className="btn btn-primary drawer-button rounded-none w-full lg:hidden ">Open More Details</label>
-                    {/* <!-- Page content here --> */}
+            <div className="grid grid-cols-3 gap-4">
+                <div className='ml-5'>
+
+                    <div className='my-2'>
+                        <span className='border-b-2 border-gray-400 font-semibold'> Chief Complaints : </span>
+                        <ul className='list-disc m-3'>
+                            {prescriptionForm.complaints.map(complaint =>
+
+                                <li>
+                                    <span className='p-2 text-lg'>{complaint} </span>
+
+
+                                </li>
+
+
+
+                            )}
+                        </ul>
+                        <CcForm addToComplaint={addToComplaint} />
+                    </div>
+                    <div className='my-2'>
+                        <span className='border-b-2 border-gray-400  font-semibold'> Past History : </span>
+                    </div>
+                    <div className='my-2'>
+                        <span className='border-b-2 border-gray-400  font-semibold'>On Examination: </span>
+                        <ul className='list-disc m-3'>
+                            {prescriptionForm.observation.map(obs =>
+
+                                <li>
+                                    <span className='p-2 text-lg'>{obs.name}:{obs.value} </span>
+
+
+                                </li>
+
+
+                            )}
+                        </ul>
+                        <OnExaminationForm addToOnExamination={addToOnExamination}></OnExaminationForm>
+                    </div>
+                    <div className='my-2'>
+                        <span className='border-b-2 border-gray-400  font-semibold'> Investigation : </span>
+                        <ul className='list-disc m-3'>
+                            {prescriptionForm.investigations.map(invst =>
+
+                                <li>
+                                    <span className='p-2 text-lg'>{invst} </span>
+
+
+                                </li>
+
+
+                            )}
+                        </ul>
+                        <InvestigationForm addToInvestigation={addToInvestigation} />
+
+                    </div>
+                    <div className='my-2'>
+                        <span className='border-b-2 border-gray-400  font-semibold'> Diagnosis : </span>
+                        <ul className='list-disc m-3'>
+                            {prescriptionForm.diagnosis.map(dia =>
+
+                                <li>
+                                    <span className='p-2 text-lg'>{dia} </span>
+
+
+                                </li>
+
+
+                            )}
+                        </ul>
+                        <DiagnosisForm addToDiagnosis={addToDiagnosis} />
+                    </div>
+
+
+                </div>
+
+
+                <div className="mr-5 col-span-2 border-l-2 border-cyan-600 h-screen">
+
+
+
                     <div className='flex  justify-around text-lg py-2 border-b-2 border-cyan-600'>
                         <span>Name:</span>
                         <span>Age:</span>
@@ -53,16 +135,15 @@ const index = () => {
                     <div>
 
                         <div className='p-3'>
-                            <span className='border-b-4 border-black font-semibold'> RX  : </span>
+                            <span className='border-b-2 border-gray-400  font-semibold'> RX  : </span>
                             <ol className='list-decimal m-3'>
-                                {prescriptionArray.map(pres =>
+                                {prescriptionForm.medicines.map(pres =>
 
                                     <li>
-                                        <span className='p-2 text-lg'>{pres.Name} </span> <br />
-                                        <span className='p-2'> {pres.consumptionFrequency} </span>
-                                        <span className='p-2'>{pres.consumptionHour}</span>
-                                        <span className='p-2'>{pres.consumptionPeriod} {pres.consumptionPeriod2} </span>
-
+                                        <span className='p-2 text-lg'>{pres.name} </span> <br />
+                                        <span className='p-2'> {pres.dose} </span>
+                                        <span className='p-2'>{pres.doseTime}</span>
+                                        <span className='p-2'>{pres.time} {pres.timeType} </span>
 
                                     </li>
 
@@ -76,85 +157,35 @@ const index = () => {
 
                         </div>
 
-                        {/* input form for RX */}
-                        <form onSubmit={e => { HandelSubmit1(e) }}>
-                            <div className='grid grid-cols-1 lg:grid-cols-3 gap-2'>
-                                <div className="form-control w-full max-w-xs px-3">
-                                    <label className="label">
-                                        <span className="label-text">Name</span>
-                                    </label>
-                                    <input type="text" placeholder="Type here" className="input input-bordered border-info w-full max-w-xs" />
+                        <div>
+                            <RxForm addToMedicine={addToMedicine} />
+                        </div>
 
-                                </div>
-                                <div className="form-control w-full max-w-xs px-3 ">
-                                    <label className="label">
-                                        <span className="label-text">Frequency</span>
-                                    </label>
-                                    <input type="text" className="input input-bordered  border-info w-full max-w-xs" />
-
-                                </div>
-                                <div className='mt-2 flex flex-col w-full px-3'>
-                                    <label className="label-text ">Consumption Time</label>
-                                    <select className="select select-bordered border-info w-full mt-1.5 max-w-xs">
-                                        <option>A.M</option>
-                                        <option>P.M</option>
-                                    </select>
-                                </div>
-                                <div className="form-control  w-full max-w-xs px-3">
-                                    <label className="label-text">
-                                        Consumption Period
-                                    </label>
-                                    <div className='flex lg:flex-row  justify-center items-center '>
-                                        <input type="number" min={0} className="input input-bordered  mt-1.5 border-info w-full max-w-xs" />
-
-                                    </div>
-                                </div>
-                                <div className="form-control  w-full max-w-xs px-3">
-                                    <label className="label-text">
-                                        Period
-                                    </label>
-                                    <select className="select select-bordered border-info w-full max-w-xs mt-1.5">
-                                        <option>Days</option>
-                                        <option>Weeks</option>
-                                        <option>Months</option>
-                                    </select>
-                                </div>
-
-                                <div>
-
-                                    <button type='submit' onClick={HandelSubmit1} className='btn btn-success lg:mt-6 px-10 mx-3'>Submit</button>
-                                </div>
-                            </div>
-                        </form>
                     </div>
-                </div>
-                <div className="drawer-side">
-                    <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
-                    <ul className="menu p-4 overflow-y-auto w-80 bg-base-100 text-base-content border-r-2 border-cyan-600">
-                        {/* <!-- Sidebar content here --> */}
-                        <div className='my-2'>
-                            <span className='border-b-4 border-black font-semibold'> CC : </span>
-                            <select className="select select-bordered border-info w-full max-w-xs mt-1.5">
-                                <option>Days</option>
-                                <option>Weeks</option>
-                                <option>Months</option>
-                            </select>
-                            <button className='btn btn-success lg:mt-6  mx-3'>Submit</button>
-                        </div>
-                        <div className='my-2'>
-                            <span className='border-b-4 border-black font-semibold'> P.H : </span>
-                        </div>
-                        <div className='my-2'>
-                            <span className='border-b-4 border-black font-semibold'> D.X : </span>
-                        </div>
+                    <div className='mt-10 p-3'>
+                        <span className='border-b-2 border-gray-400  font-semibold'> Advices  : </span>
+                        <ul className='list-disc m-3'>
+                            {prescriptionForm.advices.map(adv =>
+
+                                <li>
+                                    <span className='p-2 text-lg'>{adv} </span>
 
 
-                    </ul>
+                                </li>
+
+
+
+                            )}
+                        </ul>
+                        <AdviceField addToAdvice={addToAdvice} />
+                    </div>
 
                 </div>
+
+
             </div>
         </>
     );
 };
 
-export default index;
+export default Index;

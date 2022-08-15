@@ -18,10 +18,10 @@ const Navbar: FC<IProps> = ({ login }) => {
         <div className="navbar bg-cyan-600 text-white">
           <div className="navbar-start">
             <div className="dropdown ">
-              <label tabindex="0" className="btn btn-ghost lg:hidden">
+              <label tabIndex={0} className="btn btn-ghost lg:hidden">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" /></svg>
               </label>
-              <ul tabindex="0" className="menu menu-compact dropdown-content bg-cyan-600 text-white mt-3 p-2 shadow rounded-box w-52">
+              <ul tabIndex={0} className="menu menu-compact dropdown-content bg-cyan-600 text-white mt-3 p-2 shadow rounded-box w-52">
 
                 <li>    <a
                   href="#responsive-header"
@@ -93,46 +93,28 @@ const Navbar: FC<IProps> = ({ login }) => {
             </div>
             <div>
               {!login ? (
-              < {!login ? (
-              <a
-                href="/auth/login"
-                className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
-              >
-                Login
-              </a>
+                <a
+                  href="/auth/login"
+                  className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
+                >
+                  Login
+                </a>
               ) : (
-              <a
-                className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:cursor-pointer hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
-                onClick={() => {
-                  console.log("logout");
-                  removeLocalHostData("user");
-                  router.push("/auth/login");
-                }}
-              >
-                Logout
-              </a>
-            )}
-              href="/auth/login"
-              className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
-              >
-              Login
-            </a>
-            ) : (
-            <a
-              className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:cursor-pointer hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
-              onClick={() => {
-                console.log("logout");
-                removeLocalHostData("user");
-                router.push("/auth/login");
-              }}
-            >
-              Logout
-            </a>
-            )}
+                <a
+                  className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:cursor-pointer hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
+                  onClick={() => {
+                    console.log("logout");
+                    removeLocalHostData("user");
+                    router.push("/auth/login");
+                  }}
+                >
+                  Logout
+                </a>
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
 
 

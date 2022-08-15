@@ -1,12 +1,12 @@
 import Navbar from "./navbar.component";
-improt {FC} from "react";
+import { FC } from "react";
 
 interface IProps {
   loading?: boolean;
   children?: any;
 }
 
-const Main: FC<IProps> = ({loading, children}) => {
+const Main: FC<IProps> = ({ loading, children }) => {
   return (
     <>
       <Navbar />
