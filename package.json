@@ -7,13 +7,9 @@
   },
   "dependencies": {
     "axios": "^0.27.2",
-    "mqtt": "^4.3.7",
-    "mqtt-react-hooks": "^3.0.0-alpha.2",
     "next": "latest",
     "react": "18.1.0",
-    "react-dom": "18.1.0",
-    "react-fade-in": "^2.0.1",
-    "react-mqtt-client": "^1.0.0"
+    "react-dom": "18.1.0"
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",
