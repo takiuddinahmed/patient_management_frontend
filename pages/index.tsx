@@ -7,17 +7,7 @@ const HomePage = () => {
 
   useEffect(() => {
     const load = async () => {
-      const localdatastr = await getLocalHostData("user");
-      console.log(localdatastr);
-      if (!localdatastr) {
-        router.push("/auth/login");
-      } else {
-        const userData = JSON.parse(localdatastr);
-        console.log(userData);
-        if (userData.userRole == "doctor") {
-          router.push("/doctor");
-        }
-      }
+      router.push("/doctor");
     };
     load();
   }, []);

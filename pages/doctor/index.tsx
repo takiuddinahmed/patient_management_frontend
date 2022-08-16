@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Button from "../../components/basic/button.component";
 import Navbar from "../../components/layouts/navbar.component";
 import CardShow from "../../components/temp/cardShow";
-import { getLocalHostData } from "../../utils/getLocalData.util";
 
 interface IUser {
   firstName?: string;
@@ -19,6 +18,7 @@ const Home: NextPage = () => {
   const [user, setUser] = useState<IUser | null>(null);
   const [showCard, setShowCard] = useState<boolean>(false);
   const router = useRouter();
+
 
   const showPatient = () => {
     return (
