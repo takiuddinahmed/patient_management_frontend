@@ -105,7 +105,7 @@ const Index = () => {
             </span>
             <ul className="list-disc m-3">
               {prescriptionForm.complaints.map((complaint) => (
-                <li>
+                <li key={complaint}>
                   <span className="p-2 text-lg">{complaint} </span>
                 </li>
               ))}
@@ -124,7 +124,7 @@ const Index = () => {
             </span>
             <ul className="list-disc m-3">
               {prescriptionForm.observation.map((obs) => (
-                <li>
+                <li key={obs.name}>
                   <span className="p-2 text-lg">
                     {obs.name}:{obs.value}{" "}
                   </span>
@@ -142,7 +142,7 @@ const Index = () => {
             </span>
             <ul className="list-disc m-3">
               {prescriptionForm.investigations.map((invst) => (
-                <li>
+                <li key={invst}>
                   <span className="p-2 text-lg">{invst} </span>
                 </li>
               ))}
@@ -156,7 +156,7 @@ const Index = () => {
             </span>
             <ul className="list-disc m-3">
               {prescriptionForm.diagnosis.map((dia) => (
-                <li>
+                <li key={dia}>
                   <span className="p-2 text-lg">{dia} </span>
                 </li>
               ))}
@@ -179,7 +179,7 @@ const Index = () => {
               </span>
               <ol className="list-decimal m-3">
                 {prescriptionForm.medicines.map((pres) => (
-                  <li>
+                  <li key={pres.name}>
                     <span className="p-2 text-lg">{pres.name} </span> <br />
                     <span className="p-2"> {pres.dose} </span>
                     <span className="p-2">{pres.doseTime}</span>
@@ -202,7 +202,7 @@ const Index = () => {
             </span>
             <ul className="list-disc m-3">
               {prescriptionForm.advices.map((adv) => (
-                <li>
+                <li key={adv}>
                   <span className="p-2 text-lg">{adv} </span>
                 </li>
               ))}

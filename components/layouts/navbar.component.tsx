@@ -29,9 +29,9 @@ const Navbar: FC<IProps> = ({ login, user }) => {
                   stroke="currentColor"
                 >
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
                     d="M4 6h16M4 12h8m-8 6h16"
                   />
                 </svg>
@@ -129,14 +129,14 @@ const Navbar: FC<IProps> = ({ login, user }) => {
             </div>
             <div>
               {!login ? (
-                <a
+                <Link
                   href="/auth/login"
                   className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
                 >
                   Login
-                </a>
+                </Link>
               ) : (
-                <a
+                <button
                   className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:cursor-pointer hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
                   onClick={() => {
                     console.log("logout");
@@ -145,7 +145,7 @@ const Navbar: FC<IProps> = ({ login, user }) => {
                   }}
                 >
                   Logout
-                </a>
+                </button>
               )}
             </div>
           </div>
