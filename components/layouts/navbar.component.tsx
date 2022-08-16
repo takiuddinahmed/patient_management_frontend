@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FC } from "react";
+import { IUser } from "../../interface/user.interface";
 import {
   removeLocalHostData,
   setLocalHostData,
@@ -8,9 +9,10 @@ import {
 
 interface IProps {
   login?: boolean;
+  user?: IUser | null;
 }
 
-const Navbar: FC<IProps> = ({ login }) => {
+const Navbar: FC<IProps> = ({ login, user }) => {
   const router = useRouter();
   return (
     <>
@@ -19,29 +21,52 @@ const Navbar: FC<IProps> = ({ login }) => {
           <div className="navbar-start">
             <div className="dropdown ">
               <label tabIndex={0} className="btn btn-ghost lg:hidden">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" /></svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 6h16M4 12h8m-8 6h16"
+                  />
+                </svg>
               </label>
-              <ul tabIndex={0} className="menu menu-compact dropdown-content bg-cyan-600 text-white mt-3 p-2 shadow rounded-box w-52">
+              <ul
+                tabIndex={0}
+                className="menu menu-compact dropdown-content bg-cyan-600 text-white mt-3 p-2 shadow rounded-box w-52"
+              >
+                <li>
+                  {" "}
+                  <a
+                    href="#responsive-header"
+                    className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4"
+                  >
+                    Services
+                  </a>
+                </li>
+                <li>
+                  {" "}
+                  <a
+                    href="#responsive-header"
+                    className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4"
+                  >
+                    About Us
+                  </a>
+                </li>
 
-                <li>    <a
-                  href="#responsive-header"
-                  className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4"
-                >
-                  Services
-                </a></li>
-                <li>     <a
-                  href="#responsive-header"
-                  className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4"
-                >
-                  About Us
-                </a></li>
-
-                <li>   <a
-                  href="#responsive-header"
-                  className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white"
-                >
-                  Contact
-                </a>
+                <li>
+                  {" "}
+                  <a
+                    href="#responsive-header"
+                    className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white"
+                  >
+                    Contact
+                  </a>
                 </li>
               </ul>
             </div>
@@ -62,33 +87,44 @@ const Navbar: FC<IProps> = ({ login }) => {
           </div>
           <div className="navbar-center hidden lg:flex">
             <ul className="menu menu-horizontal p-0">
+              <li>
+                {" "}
+                <a
+                  href="#responsive-header"
+                  className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4"
+                >
+                  Services
+                </a>
+              </li>
+              <li>
+                {" "}
+                <a
+                  href="#responsive-header"
+                  className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4"
+                >
+                  About Us
+                </a>
+              </li>
 
-              <li>    <a
-                href="#responsive-header"
-                className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4"
-              >
-                Services
-              </a></li>
-              <li>     <a
-                href="#responsive-header"
-                className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4"
-              >
-                About Us
-              </a></li>
-
-              <li>   <a
-                href="#responsive-header"
-                className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white"
-              >
-                Contact
-              </a>
+              <li>
+                {" "}
+                <a
+                  href="#responsive-header"
+                  className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white"
+                >
+                  Contact
+                </a>
               </li>
             </ul>
           </div>
           <div className="navbar-end content-center items-center mx-3">
             <div className="avatar placeholder  mx-3 py-0">
               <div className="bg-white text-gray-400 rounded-full w-10">
-                <span>MX</span>
+                <span>
+                  {user
+                    ? `${user.firstName?.charAt(0)}${user.lastName?.charAt(0)}`
+                    : ""}
+                </span>
               </div>
             </div>
             <div>
@@ -115,14 +151,6 @@ const Navbar: FC<IProps> = ({ login }) => {
           </div>
         </div>
       </div>
-
-
-
-
-
-
-
-
     </>
   );
 };

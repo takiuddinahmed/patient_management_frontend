@@ -16,6 +16,7 @@ const Form: FC<IProps> = ({ onSubmit, children, error }) => {
   };
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    console.log(error);
     e.preventDefault();
     if (
       error &&

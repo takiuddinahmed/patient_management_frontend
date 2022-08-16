@@ -8,6 +8,9 @@ export interface IRegisterForm {
   lastName: string;
   userRole: role | "";
   cardId?: string;
+  age?: number | string;
+  sex?: string;
+  doctorType?: string;
 }
 
 export const initialLoginFormData: IRegisterForm = {
@@ -17,10 +20,14 @@ export const initialLoginFormData: IRegisterForm = {
   lastName: "",
   userRole: "",
   cardId: "",
+  age: "",
+  sex: "",
+  doctorType: "",
 };
 
 export const registerApi = async (data: IRegisterForm) => {
   try {
+    if (data.age == "") data.age = "24";
     const res = await fetchApi.post("/auth/register", data);
     if (res.status == 201) {
       return res.data;

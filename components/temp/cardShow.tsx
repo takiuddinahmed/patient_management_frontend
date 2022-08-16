@@ -19,6 +19,7 @@ const CardShow = () => {
 
   useEffect(() => {
     const getData = async () => {
+      let timeout: any;
       const res = await fetchApi.get("/iot");
       console.log(res);
       if (res.status == 200 && res?.data?.cardId?.length) {
@@ -30,7 +31,7 @@ const CardShow = () => {
         }
         setCardId(data.cardId);
       } else {
-        setTimeout(() => {
+        timeout = setTimeout(() => {
           getData();
         }, 500);
       }

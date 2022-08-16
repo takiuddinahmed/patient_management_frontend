@@ -52,6 +52,8 @@ const Register = () => {
   }, [loginFormData]);
 
   const handleSubmit = async () => {
+    console.log(loginFormData);
+    console.log(error);
     try {
       const result = await registerApi(loginFormData);
       console.log(result);
@@ -120,18 +122,55 @@ const Register = () => {
             <option value="pharmacy">Pharmacy</option>
           </SelectField>
 
-          {loginFormData.userRole == "patient" ? (
-            <InputField
-              label="Card Id"
-              error={error.cardId || null}
-              placeholder="Card Id"
-              name="card_id"
-              value={loginFormData.cardId || ""}
-              required
-              onChange={(e) => updateLoginForm("cardId", e.target.value)}
-            />
-          ) : (
-            ""
+          {loginFormData.userRole === "patient" && (
+            <>
+              <InputField
+                label="Card Id"
+                error={error.cardId || null}
+                placeholder="Card Id"
+                name="card_id"
+                value={loginFormData.cardId || ""}
+                required
+                onChange={(e) => updateLoginForm("cardId", e.target.value)}
+              />
+              <InputField
+                error={""}
+                label="Age"
+                placeholder="Age"
+                name="age"
+                value={loginFormData.age?.toString() || ""}
+                required
+                type="number"
+                onChange={(e) => updateLoginForm("age", e.target.value)}
+              />
+              <SelectField
+                label="Sex"
+                error={error.sex || ""}
+                name="sex"
+                value={loginFormData.sex || ""}
+                onChange={(e) => updateLoginForm("sex", e.target.value)}
+              >
+                <option value="" disabled>
+                  Select Role
+                </option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>=
+              </SelectField>
+            </>
+          )}
+
+          {loginFormData.userRole === "doctor" && (
+            <>
+              <InputField
+                label="Doctor Type"
+                error={error.doctorType || null}
+                placeholder="Doctor Type"
+                name="doctorType"
+                value={loginFormData.doctorType || ""}
+                required
+                onChange={(e) => updateLoginForm("doctorType", e.target.value)}
+              />
+            </>
           )}
 
           <div className="flex flex-row items-center justify-between">
