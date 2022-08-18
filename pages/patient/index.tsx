@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
-import { IMedicine } from '../../api_calls/doctor/prescription.api';
+import { initialPrescriptionForm, IPrescriptionForm } from '../../api_calls/doctor/prescription.api';
 import Navbar from '../../components/layouts/navbar.component';
 
 const Index = () => {
-    const [complaints, setComplaints] = useState<string[]>(['Headache', 'fever'])
-    const [pastHistory, setPastHistory] = useState<string[]>(['Headache', 'fever'])
-    const [observations, setObservation] = useState<any[]>([{ name: 'bp', value: 90 }])
-    const [investigations, setInvestigation] = useState<string[]>(['ECG', 'CT-scan', 'X-ray'])
-    const [diagnosis, setDiagnosis] = useState<string[]>(['ECG', 'CT-scan', 'X-ray'])
-    const [medicines, setMedicines] = useState<any[]>([{ name: 'Tab.Napa', dose: '1+0+1', doseTime: "A.M", time: 5, timeType: "days" }])
-    const [advices, setAdvices] = useState<string[]>(['rest', 'no heavy lifting', 'walk 30 mints a day'])
+    const [prescriptionForm, setPrescriptionForm] = useState<IPrescriptionForm>(
+        initialPrescriptionForm
+    );
+
     return (
         <>
             <Navbar />
@@ -21,8 +18,8 @@ const Index = () => {
                             Chief Complaints :{" "}
                         </span>
                         <ul className="list-disc m-3">
-                            {complaints.map((complain) => (
-                                <li>
+                            {prescriptionForm.complaints.map((complain) => (
+                                <li key={complain}>
                                     {complain}
                                 </li>
                             ))}
@@ -36,11 +33,7 @@ const Index = () => {
                             Past History :{" "}
                         </span>
                         <ul className="list-decimal m-3">
-                            {pastHistory.map((ph) => (
-                                <li>
-                                    {ph}
-                                </li>
-                            ))}
+
                         </ul>
 
                     </div>
@@ -49,8 +42,8 @@ const Index = () => {
                             On Examination:{" "}
                         </span>
                         <ul className="list-disc m-3">
-                            {observations.map((obs) => (
-                                <li>
+                            {prescriptionForm.observation.map((obs) => (
+                                <li key={obs.name}>
                                     <span className="p-2 text-lg">
                                         {obs.name}: {obs.value}{" "}
                                     </span>
@@ -64,9 +57,9 @@ const Index = () => {
                             Investigation :{" "}
                         </span>
                         <ul className="list-disc m-3">
-                            {investigations.map((inv) => (
+                            {prescriptionForm.investigations.map((inv) => (
 
-                                <li>{inv}</li>
+                                <li key={inv}>{inv}</li>
                             ))}
                         </ul>
 
@@ -77,9 +70,9 @@ const Index = () => {
                             Diagnosis :{" "}
                         </span>
                         <ul className="list-disc m-3">
-                            {diagnosis.map((dia) => (
+                            {prescriptionForm.diagnosis.map((dia) => (
 
-                                <li>{dia}</li>
+                                <li key={dia}>{dia}</li>
                             ))}
                         </ul>
 
@@ -99,8 +92,8 @@ const Index = () => {
                                 RX :{" "}
                             </span>
                             <ol className="list-decimal m-3">
-                                {medicines.map((pres) => (
-                                    <li>
+                                {prescriptionForm.medicines.map((pres) => (
+                                    <li key={pres.name}>
                                         <span className="p-2 text-lg">{pres.name} </span> <br />
                                         <span className="p-2"> {pres.dose} </span>
                                         <span className="p-2">{pres.doseTime}</span>
@@ -123,9 +116,9 @@ const Index = () => {
                         </span>
                         <ul className="list-disc m-3">
 
-                            {advices.map((adv) => (
+                            {prescriptionForm.advices.map((adv) => (
 
-                                <li>{adv}</li>
+                                <li key={adv}>{adv}</li>
                             ))}
                         </ul>
 
