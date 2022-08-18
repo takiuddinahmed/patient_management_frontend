@@ -1,54 +1,67 @@
+import { getDocs, onSnapshot, setDoc } from "firebase/firestore";
+import { useRouter } from "next/router";
 import { loadavg } from "os";
 import { useEffect, useState } from "react";
 import { fetchApi } from "../../api_calls/axios";
 import Button from "../basic/button.component";
+import { iotCollection, iotDoc } from "../firebase";
 
 const CardShow = () => {
-  const [cardId, setCardId] = useState(null);
+  const [cardId, setCardId] = useState<string | null>(null);
   const [msg, setMsg] = useState("");
   const [load, setLoad] = useState(false);
+  const [ready, setReady] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
-    const deleteData = async () => {
-      const data = await fetchApi.delete("/iot");
-      console.log(data);
-      setLoad(true);
-    };
-    deleteData();
+    clearData();
   }, []);
+
+  const clearData = async () => {
+    await setDoc(iotDoc, {
+      cardid: "",
+    });
+    setCardId(null);
+    setReady(true);
+  };
+
+  const gotoPrescription = () => {
+    router.push("/doctor/" + cardId);
+  };
 
   useEffect(() => {
     const getData = async () => {
-      let timeout: any;
-      const res = await fetchApi.get("/iot");
-      console.log(res);
-      if (res.status == 200 && res?.data?.cardId?.length) {
-        const data = res.data;
-        if (data.error) {
-          setMsg(`No User Found`);
-        } else {
-          setMsg(`Patient Name: ${data.firstName} ${data.lastName}`);
-        }
-        setCardId(data.cardId);
-      } else {
-        timeout = setTimeout(() => {
-          getData();
-        }, 500);
-      }
+      const unsub = onSnapshot(iotDoc, (doc) => {
+        console.log("Current Data: ", doc.data());
+        const data = doc.data();
+        if (data && data?.cardid?.length) setCardId(data.cardid);
+      });
     };
-    if (load) {
-      getData();
-    }
-  }, [load]);
+    if (ready) getData();
+  }, [ready]);
 
   return (
     <>
-      <div className="h-[300px] w-[400px] bg-white shadow-md shadow-gray-600 flex flex-col gap-3 items-center justify-between py-20">
+      <div className="h-[300px] w-[400px] bg-white shadow-md shadow-gray-600 flex flex-col gap-3 items-center justify-between py-10 my-3">
         {cardId ? (
           <div>
-            <h1 className="text-center text-2xl">RFID Card Found</h1>
-            <h2 className="text-xl mt-4">Card ID : {cardId}</h2>
-            <h2 className="text-xl">{msg}</h2>
+            <div>
+              <h1 className="text-center text-2xl">RFID Card Found</h1>
+              <h2 className="text-xl mt-4 text-center">Card ID : {cardId}</h2>
+              <h2 className="text-xl text-center">{msg}</h2>
+            </div>
+            <div className="flex gap-3 mt-3">
+              <Button onClick={() => gotoPrescription()}>
+                Go to Prescripiton
+              </Button>
+              <Button
+                onClick={() => {
+                  clearData();
+                }}
+              >
+                Reload
+              </Button>
+            </div>
           </div>
         ) : (
           <h1 className="text-2xl">Please Scan the Card</h1>

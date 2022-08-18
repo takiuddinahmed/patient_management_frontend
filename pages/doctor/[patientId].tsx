@@ -6,7 +6,7 @@ import {
   IObservation,
   IPrescriptionForm,
 } from "../../api_calls/doctor/prescription.api";
-import { getUser } from "../../api_calls/user/getUser.api";
+import { db } from "../../components/firebase";
 import AdviceField from "../../components/form/advice.component";
 import CcForm from "../../components/form/cc.component";
 import DiagnosisForm from "../../components/form/diagnosis.component";
@@ -14,7 +14,7 @@ import InvestigationForm from "../../components/form/investigation.component";
 import OnExaminationForm from "../../components/form/oe.component";
 import RxForm from "../../components/form/rx.component";
 import Navbar from "../../components/layouts/navbar.component";
-import { IUser } from "../../interface/user.interface";
+import { IUser, users } from "../../interface/user.interface";
 import { getLocalHostData } from "../../utils/getLocalData.util";
 
 const Index = () => {
@@ -69,33 +69,20 @@ const Index = () => {
   }, [prescriptionForm]);
 
   useEffect(() => {
-    const load = async () => {
-      const localdatastr = await getLocalHostData("user");
-      console.log(localdatastr);
-      if (!localdatastr) {
-        router.push("/auth/login");
-      } else {
-        const userData = JSON.parse(localdatastr);
-        setDoctor(userData);
-      }
-    };
-    load();
-  }, []);
-
-  useEffect(() => {
-    // const
-    const getPatientData = async () => {
+    if (router.isReady) {
       const { patientId } = router.query;
-      const patientData = await getUser(patientId as string);
-      console.log({ patientData });
-      setPatient(patientData);
-    };
-    if (router.isReady) getPatientData();
+      const user = users.filter((u) => u.cardId == patientId);
+      if (user.length) {
+        setPatient(user[0]);
+      } else setPatient(users[0]);
+
+      console.log(users[0]);
+    }
   }, [router]);
 
   return (
     <>
-      <Navbar login={true} user={doctor}></Navbar>
+      <Navbar login={true} user={patient}></Navbar>
       <div className="grid grid-cols-3 gap-4">
         <div className="ml-5">
           <div className="my-2">
@@ -105,7 +92,7 @@ const Index = () => {
             </span>
             <ul className="list-disc m-3">
               {prescriptionForm.complaints.map((complaint) => (
-                <li>
+                <li key={complaint}>
                   <span className="p-2 text-lg">{complaint} </span>
                 </li>
               ))}
@@ -124,7 +111,7 @@ const Index = () => {
             </span>
             <ul className="list-disc m-3">
               {prescriptionForm.observation.map((obs) => (
-                <li>
+                <li key={obs.name}>
                   <span className="p-2 text-lg">
                     {obs.name}:{obs.value}{" "}
                   </span>
@@ -142,7 +129,7 @@ const Index = () => {
             </span>
             <ul className="list-disc m-3">
               {prescriptionForm.investigations.map((invst) => (
-                <li>
+                <li key={invst}>
                   <span className="p-2 text-lg">{invst} </span>
                 </li>
               ))}
@@ -156,7 +143,7 @@ const Index = () => {
             </span>
             <ul className="list-disc m-3">
               {prescriptionForm.diagnosis.map((dia) => (
-                <li>
+                <li key={dia}>
                   <span className="p-2 text-lg">{dia} </span>
                 </li>
               ))}
@@ -179,7 +166,7 @@ const Index = () => {
               </span>
               <ol className="list-decimal m-3">
                 {prescriptionForm.medicines.map((pres) => (
-                  <li>
+                  <li key={pres.name}>
                     <span className="p-2 text-lg">{pres.name} </span> <br />
                     <span className="p-2"> {pres.dose} </span>
                     <span className="p-2">{pres.doseTime}</span>
@@ -202,7 +189,7 @@ const Index = () => {
             </span>
             <ul className="list-disc m-3">
               {prescriptionForm.advices.map((adv) => (
-                <li>
+                <li key={adv}>
                   <span className="p-2 text-lg">{adv} </span>
                 </li>
               ))}
