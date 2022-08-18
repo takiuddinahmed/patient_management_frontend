@@ -1,10 +1,62 @@
 import React, { useState } from 'react';
-import { initialPrescriptionForm, IPrescriptionForm } from '../../api_calls/doctor/prescription.api';
+import { DoseTime, IPrescriptionForm, TimeType } from '../../api_calls/doctor/prescription.api';
 import Navbar from '../../components/layouts/navbar.component';
+
+
+const patientMockData: IPrescriptionForm = {
+    medicines: [
+
+        {
+            name: "Tab.Napa",
+            dose: "1+0+1",
+            doseTime: DoseTime.AM,
+            time: 5,
+            timeType: TimeType.days,
+        },
+        {
+            name: "Tab.Alactrol",
+            dose: "1+1+1",
+            doseTime: DoseTime.AM,
+            time: 5,
+            timeType: TimeType.days,
+        },
+        {
+            name: "Inj.Maxsuline",
+            dose: "1+0+1",
+            doseTime: DoseTime.BM,
+            time: 5,
+            timeType: TimeType.month,
+        }
+
+
+
+    ],
+
+
+    complaints: ['Fever', 'Headache', 'Cold'],
+    investigations: ["ECG", "CT-scan", "X-ray"],
+    diagnosis: ['Covid-19', 'Diabetics'],
+    observation: [
+
+        {
+            name: 'BP',
+            value: 90
+        },
+        {
+            name: 'Blood Sugar',
+            value: "126 mg/dL"
+        }
+
+
+
+    ],
+    advices: ['Slow Paced Running everyday', 'No heavy lifting works'],
+
+}
 
 const Index = () => {
     const [prescriptionForm, setPrescriptionForm] = useState<IPrescriptionForm>(
-        initialPrescriptionForm
+        patientMockData
     );
 
     return (
