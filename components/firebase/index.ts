@@ -1,4 +1,5 @@
 import * as firebase from "firebase/app";
+import { getAuth } from "firebase/auth";
 import { getFirestore, collection, getDocs, doc } from "firebase/firestore";
 const clientCredentials = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -15,3 +16,4 @@ export const app = firebase.initializeApp(clientCredentials);
 export const db = getFirestore(app);
 export const iotCollection = collection(db, "IOT");
 export const iotDoc = doc(db, "IOT", "cardinfo");
+export const auth = getAuth(app);

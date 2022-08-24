@@ -12,6 +12,16 @@ export interface IRegisterForm {
   sex?: string;
   doctorType?: string;
 }
+export interface IUserData {
+  email: string;
+  firstName: string;
+  lastName: string;
+  userRole: role | "";
+  cardId?: string;
+  age?: number | string;
+  sex?: string;
+  doctorType?: string;
+}
 
 export const initialLoginFormData: IRegisterForm = {
   email: "",
@@ -25,6 +35,16 @@ export const initialLoginFormData: IRegisterForm = {
   doctorType: "",
 };
 
+export const initialUserData: IUserData = {
+  email: "",
+  firstName: "",
+  lastName: "",
+  userRole: "",
+  cardId: "",
+  age: "",
+  sex: "",
+  doctorType: "",
+};
 export const registerApi = async (data: IRegisterForm) => {
   try {
     if (data.age == "") data.age = "24";

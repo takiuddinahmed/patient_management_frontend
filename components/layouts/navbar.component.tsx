@@ -1,19 +1,30 @@
+import { signOut } from "firebase/auth";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FC } from "react";
+import { useAuthState, useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { IUser } from "../../interface/user.interface";
 import {
   removeLocalHostData,
   setLocalHostData,
 } from "../../utils/getLocalData.util";
+import { auth } from "../firebase";
 
-interface IProps {
-  login?: boolean;
-  user?: IUser | null;
-}
 
-const Navbar: FC<IProps> = ({ login, user }) => {
+const Navbar = () => {
   const router = useRouter();
+
+
+  const [user] = useAuthState(auth);
+
+
+
+  // console.log(user, 'hello from navbar')
+
+
+
+
+
   return (
     <>
       <div>
@@ -122,14 +133,15 @@ const Navbar: FC<IProps> = ({ login, user }) => {
               <div className="bg-white text-gray-400 rounded-full w-10">
                 <span>
                   {user
-                    ? `${user.firstName?.charAt(0)}${user.lastName?.charAt(0)}`
+                    ? `${user?.displayName?.charAt(0)}${user?.displayName?.charAt(0)}`
                     : ""}
                 </span>
               </div>
             </div>
             <div>
-              {!login ? (
+              {!user ? (
                 <Link
+
                   href="/auth/login"
                   className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
                 >
@@ -139,6 +151,7 @@ const Navbar: FC<IProps> = ({ login, user }) => {
                 <button
                   className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:cursor-pointer hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
                   onClick={() => {
+                    signOut(auth);
                     console.log("logout");
                     removeLocalHostData("user");
                     router.push("/auth/login");

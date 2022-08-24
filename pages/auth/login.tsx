@@ -1,17 +1,32 @@
+import { getAuth } from "firebase/auth";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState, FormEventHandler } from "react";
+import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import {
   ILoginForm,
   initialLoginFormData,
   loginApi,
 } from "../../api_calls/user/login.api";
 import Button from "../../components/basic/button.component";
+import { auth } from "../../components/firebase";
 import Form from "../../components/form/form.component";
 import InputField from "../../components/form/inputField.component";
 import Navbar from "../../components/layouts/navbar.component";
 
+
+
+
+
 const Login = () => {
+
+  const [
+    signInWithEmailAndPassword,
+    user,
+    loading,
+    signInError,
+  ] = useSignInWithEmailAndPassword(auth);
+
   const router = useRouter();
   const [loginFormData, setLoginFormData] =
     useState<ILoginForm>(initialLoginFormData);
@@ -45,16 +60,21 @@ const Login = () => {
     // e.preventDefault();
     console.log(loginFormData);
     try {
-      const data = await loginApi(loginFormData);
-      if (data) {
-        router.push("/");
-      } else {
-        alert("Unable to login");
-      }
+      const email = loginFormData.email;
+      const password = loginFormData.password;
+      signInWithEmailAndPassword(email, password)
+
+      // if (user) {
+      //   router.push("/");
+      // } else {
+      //   alert("Unable to login");
+      // }
     } catch (err) {
       alert("Unable to login");
     }
   };
+
+  // console.log(user, 'this is from login page')
 
   return (
     <>

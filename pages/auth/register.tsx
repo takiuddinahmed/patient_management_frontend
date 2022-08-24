@@ -3,7 +3,9 @@ import Router, { useRouter } from "next/router";
 import { useEffect, useState, FormEventHandler } from "react";
 import {
   initialLoginFormData,
+  initialUserData,
   IRegisterForm,
+  IUserData,
   registerApi,
 } from "../../api_calls/user/register.api";
 import Button from "../../components/basic/button.component";
@@ -13,17 +15,46 @@ import SelectField from "../../components/form/select.component";
 import Main from "../../components/layouts/main.component";
 import Navbar from "../../components/layouts/navbar.component";
 import { role } from "../../interface/user.interface";
+import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { auth, db } from "../../components/firebase";
+import { addDoc, collection } from "firebase/firestore";
+
+
+
+
+
 
 const roles = ["patient", "doctor", "lab", "pharmacy"];
 
 const Register = () => {
+  const [
+    createUserWithEmailAndPassword,
+    user,
+    loading,
+    createUserError,
+  ] = useCreateUserWithEmailAndPassword(auth);
+
+  const [userData, setUserData] = useState<IUserData>(initialUserData)
+
+
+
+
   const router = useRouter();
   const [loginFormData, setLoginFormData] =
     useState<IRegisterForm>(initialLoginFormData);
+
+
+
+
   const [error, setError] = useState<IRegisterForm>(initialLoginFormData);
+
 
   const updateLoginForm = (field: string, inputValue: string) => {
     setLoginFormData((value) => {
+      return { ...value, [field]: inputValue };
+    });
+
+    setUserData((value) => {
       return { ...value, [field]: inputValue };
     });
   };
@@ -32,6 +63,7 @@ const Register = () => {
       return { ...value, [field]: inputValue };
     });
   };
+
 
   useEffect(() => {
     if (loginFormData.email.length < 3) {
@@ -51,22 +83,26 @@ const Register = () => {
     }
   }, [loginFormData]);
 
+
   const handleSubmit = async () => {
     console.log(loginFormData);
     console.log(error);
+
+    const colRef = collection(db, 'User-Info')
+    await addDoc(colRef, userData)
+
     try {
-      const result = await registerApi(loginFormData);
-      console.log(result);
-      if (result) {
-        router.push("/auth/login");
-      } else {
-        alert("Register Failed. Try again");
-      }
+      const email = loginFormData.email;
+      const password = loginFormData.password;
+      createUserWithEmailAndPassword(email, password)
     } catch (err) {
       alert("Register Failed. Try again");
     }
-  };
 
+
+  };
+  // console.log(user, 'from regestration')
+  // console.log(loginFormData, 'from regestration loginform data')
   return (
     <>
       <Main>
@@ -96,6 +132,7 @@ const Register = () => {
             name="email"
             value={loginFormData.email}
             required
+
             onChange={(e) => updateLoginForm("email", e.target.value)}
           />
           <InputField
