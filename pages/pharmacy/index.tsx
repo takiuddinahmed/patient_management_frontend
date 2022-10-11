@@ -43,7 +43,7 @@ const Index = () => {
         pharmacyMockData);
     return (
         <div>
-            <Navbar />
+            <Navbar login={true} user={''}></Navbar>
 
             <div>
 

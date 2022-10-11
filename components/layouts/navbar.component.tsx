@@ -10,8 +10,12 @@ import {
 } from "../../utils/getLocalData.util";
 import { auth } from "../firebase";
 
+interface NavbarProps {
+  login: boolean;
+  user: any;
+}
 
-const Navbar = () => {
+const Navbar = ({ login, user: userData }: NavbarProps) => {
   const router = useRouter();
 
 

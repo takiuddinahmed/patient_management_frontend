@@ -78,7 +78,7 @@ const Login = () => {
 
   return (
     <>
-      <Navbar />
+      <Navbar login={true} user={''}></Navbar>
       <div className="m-6 h-full flex justify-center items-center">
         <Form onSubmit={handleSubmit}>
           <InputField

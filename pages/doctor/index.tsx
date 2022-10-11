@@ -64,7 +64,7 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <Navbar login={user != null} />
+      <Navbar login={true} user={"patient"}></Navbar>
       <div className="flex justify-center  items-start  mt-40 h-screen w-screen ">
         {user?.userRole == "patient" ? showPatient() : showDoctor(showCard)}
       </div>

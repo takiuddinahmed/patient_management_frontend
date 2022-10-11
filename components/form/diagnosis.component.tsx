@@ -3,17 +3,60 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 const dx: string[] = [
 
-    "AML",
-    "CML",
-    "ALL",
-    "CLL",
-    "Limphoma",
-    "Lung Cancer",
-    "Breast Cancer",
-    "Ovarium Cancer",
-    "Prostetic Cancer",
-    "Rectal Cancer",
-    "Gastric Cancer"
+    ' Myocardial Infarction ST elevated '
+    , 'Myocardial Infarction Non-ST elevated'
+    , 'Unstable Angina'
+    , ' Heart Failure'
+    , ' Angina Pectoris'
+    , '1st Degree Heart Block'
+    , '2nd Degree Heart Block'
+    , '3rd Degree Heart Block'
+    , 'Left Bundle Brunch Lock'
+    , 'Right Bundle Brunch Lock'
+    , 'Rheumatic Heart Disease'
+    , 'Stroke(Ischemic Stroke & Hemorrhagic Stroke)'
+    , 'Spinal Cord Injury'
+    , 'Headache'
+    , 'Migraine'
+    , 'Gulliane Bari Syndrome'
+    , 'Transverse Myelitis'
+    , 'Cerebellar Hemorrhage'
+    , 'Parkinson’s Disease'
+    , 'Meningitis'
+    , 'Encephalitis'
+    , 'AKI'
+    , 'CKD'
+    , 'Renal Failure'
+    , 'Acute Retention of Urine'
+    , 'Nephrotic Syndrome'
+    , 'Acute Glomerulo Nephritis'
+    , 'IGA Nephropathy'
+    , 'Renal Stone'
+    , 'Hyperthyroidism'
+    , 'Diabetes Mellitus'
+    , 'Hypo Para Thyroidism'
+    , 'Critinism'
+    , 'Graves Disease'
+    , 'Diabetes Incipidus'
+    , 'Dwarfism'
+    , 'Gigantism'
+    , 'Scabis'
+    , 'Dermatitis'
+    , 'Eczema'
+    , 'Ring Warm'
+    , 'Vitiligo'
+    , 'Hair Fall'
+    , 'Acne Vulgaris'
+    , 'Herpes'
+    , 'Syphilis'
+    , 'Gonorrhea'
+    , 'Depressive Disorder'
+    , 'Bipolar Mode Disorder'
+    , 'Somatoform Disorder'
+    , 'Acute Psychosis'
+    , 'Schizophrenia'
+    , 'Generalized Anxiety Disorder'
+    , 'Conversion Disorder'
 
 
 ];

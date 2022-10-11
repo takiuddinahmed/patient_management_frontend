@@ -5,11 +5,35 @@ import Autocomplete from '@mui/material/Autocomplete';
 
 
 const test: string[] = [
-    'PBF',
-    'Bone Marrow Study',
-    'Biopsy',
-    'FNAC',
-    'CBC'
+    'ECG'
+    , 'Echo Cardiogram'
+    , 'Color Doppler Study'
+    , 'ETT'
+    , 'Troponin I'
+    , 'Lipid Profile'
+    , 'CT Scan'
+    , 'MRI'
+    , 'NCS'
+    , 'X-Ray Spine'
+    , 'CSF Study'
+    , 'Serum Kreatinin'
+    , 'USG of KUB'
+    , 'X-Ray of KUB'
+    , 'Renal Function Test'
+    , 'Insulin TRS Test'
+    , 'TSH'
+    , 'FT4'
+    , 'FT3'
+    , 'S Calcium'
+    , 'Para Thyroid Hormone'
+    , 'RBS'
+    , 'FBS'
+    , 'OGTT'
+    , 'VDRL'
+    , 'Skin Scanning'
+    , 'CBC'
+    , 'IG E-level'
+    , 'Mental State Examination'
 
 ];
 

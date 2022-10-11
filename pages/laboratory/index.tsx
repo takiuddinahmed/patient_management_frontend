@@ -31,7 +31,7 @@ const Index = () => {
         labMockData);
     return (
         <>
-            <Navbar />
+            <Navbar login={true} user={''}></Navbar>
 
 
 

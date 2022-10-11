@@ -101,7 +101,7 @@ const Register = () => {
 
 
   };
-  // console.log(user, 'from regestration')
+  console.log(userData, 'from regestration')
   // console.log(loginFormData, 'from regestration loginform data')
   return (
     <>
