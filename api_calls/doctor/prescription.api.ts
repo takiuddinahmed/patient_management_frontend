@@ -28,14 +28,14 @@ export interface IPrescriptionForm {
   diagnosis: string[];
   observation: IObservation[];
   advices: string[];
-  derivative: string[];
+  differential: string[];
 }
 
 export const initialPrescriptionForm = {
   medicines: [],
   complaints: [],
   investigations: [],
-  derivative: [],
+  differential: [],
   diagnosis: [],
   observation: [],
   advices: [],

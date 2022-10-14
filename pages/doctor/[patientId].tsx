@@ -9,7 +9,7 @@ import {
 import { db } from "../../components/firebase";
 import AdviceField from "../../components/form/advice.component";
 import CcForm from "../../components/form/cc.component";
-import DerivativeForm from "../../components/form/derivative.component";
+import DifferentialForm from "../../components/form/differential.component";
 import DiagnosisForm from "../../components/form/diagnosis.component";
 import InvestigationForm from "../../components/form/investigation.component";
 import OnExaminationForm from "../../components/form/oe.component";
@@ -64,10 +64,10 @@ const Index = () => {
       advices: [...prev.advices, advice],
     }));
   };
-  const addToDerivativeForm = (derivative: string) => {
+  const addToDifferentialForm = (differential: string) => {
     setPrescriptionForm((prev) => ({
       ...prev,
-      derivative: [...prev.derivative, derivative],
+      differential: [...prev.differential, differential],
     }));
   };
 
@@ -146,16 +146,16 @@ const Index = () => {
           <div className="my-2">
             <span className="border-b-2 border-gray-400  font-semibold">
               {" "}
-              Derivative Diagnosis :{" "}
+              Differential Diagnosis :{" "}
             </span>
             <ul className="list-disc m-3">
-              {prescriptionForm.derivative.map((dia) => (
-                <li key={dia}>
-                  <span className="p-2 text-lg">{dia} </span>
+              {prescriptionForm.differential.map((dif) => (
+                <li key={dif}>
+                  <span className="p-2 text-lg">{dif} </span>
                 </li>
               ))}
             </ul>
-            <DerivativeForm addToDerivativeForm={addToDerivativeForm} />
+            <DifferentialForm addToDifferentialForm={addToDifferentialForm} />
 
           </div>
           <div className="my-2">
