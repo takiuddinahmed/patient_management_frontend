@@ -35,7 +35,7 @@ const OnExaminationForm: FC<IProp> = ({ addToOnExamination }) => {
 
                         </div>
                     </div>
-                    <button type='submit' className='btn btn-primary mt-2'>ADD</button>
+                    <button type='submit' className='btn btn-success text-white mt-2'>ADD</button>
                 </div>
             </form>
         </div>

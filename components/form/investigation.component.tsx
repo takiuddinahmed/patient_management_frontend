@@ -71,7 +71,7 @@ const InvestigationForm: FC<IProp> = ({ addToInvestigation }) => {
                         />}
                     />
                 </div>
-                <button type='submit' className='btn btn-primary  mx-3'>ADD</button>
+                <button type='submit' className='btn btn-success text-white  mx-3'>ADD</button>
             </form>
         </div>
     );

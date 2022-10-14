@@ -25,7 +25,7 @@ const CcForm: FC<IProp> = ({ addToComplaint }) => {
                     <input value={complaintsForm} onChange={(e) => updateComplaintsForm(e.target.value)} type="text" placeholder="Complaints" className="input input-bordered border-info w-full max-w-xs" />
 
                 </div>
-                <button type='submit' className='btn btn-primary lg:mt-6  mx-3'>ADD</button>
+                <button type='submit' className='btn btn-success text-white lg:mt-6  mx-3'>ADD</button>
             </form>
 
         </div>

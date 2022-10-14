@@ -92,7 +92,7 @@ const RxForm: FC<IProp> = ({ addToMedicine }) => {
           <div>
             <button
               type="submit"
-              className="btn btn-success lg:mt-6 px-10 mx-3"
+              className="btn btn-success text-white lg:mt-6 px-10 mx-3"
             >
               Submit
             </button>

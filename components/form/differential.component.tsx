@@ -21,7 +21,7 @@ const DifferentialForm: FC<IProp> = ({ addToDifferentialForm }) => {
             <form onSubmit={(e) => { e.preventDefault(); handleSubmit() }}
                 className='flex items-center'>
                 <textarea value={differentialForm} onChange={(e) => updateDifferentialForm(e.target.value)} className="textarea textarea-info w-96" placeholder="Differential Diagnosis"></textarea>
-                <button type='submit' className='btn btn-primary px-10 mx-3'>Add</button>
+                <button type='submit' className='btn btn-success text-white px-10 mx-3'>Add</button>
             </form>
         </div>
     );

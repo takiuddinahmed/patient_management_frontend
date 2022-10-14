@@ -21,7 +21,7 @@ const AdviceField: FC<IProp> = ({ addToAdvice }) => {
             <form onSubmit={(e) => { e.preventDefault(); handleSubmit() }}
                 className='flex items-center'>
                 <textarea value={adviceForm} onChange={(e) => updateAdviceForm(e.target.value)} className="textarea textarea-info w-96" placeholder="Advice"></textarea>
-                <button type='submit' className='btn btn-success px-10 mx-3'>Add</button>
+                <button type='submit' className='btn text-white btn-success px-10 mx-3'>Add</button>
             </form>
         </div>
     );
