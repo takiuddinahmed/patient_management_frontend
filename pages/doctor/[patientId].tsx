@@ -17,6 +17,7 @@ import RxForm from "../../components/form/rx.component";
 import Navbar from "../../components/layouts/navbar.component";
 import { IUser, users } from "../../interface/user.interface";
 import { getLocalHostData } from "../../utils/getLocalData.util";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 
 const Index = () => {
   const [prescriptionForm, setPrescriptionForm] = useState<IPrescriptionForm>(
@@ -71,6 +72,29 @@ const Index = () => {
     }));
   };
 
+  const colRef = collection(db, "prescription")
+
+
+  const handleSubmit = async (prescriptionForm: IPrescriptionForm, patientId: string | string[] | undefined) => {
+
+
+
+    await addDoc(colRef, {
+      advices: prescriptionForm.advices,
+      complaints: prescriptionForm.complaints,
+      diagnosis: prescriptionForm.diagnosis,
+      differential: prescriptionForm.differential,
+      investigation: prescriptionForm.investigations,
+      medicine: prescriptionForm.medicines,
+      observation: prescriptionForm.observation,
+      patientId: patientId
+
+
+    })
+
+
+  }
+
   useEffect(() => {
     console.log({ prescriptionForm });
   }, [prescriptionForm]);
@@ -86,6 +110,9 @@ const Index = () => {
       console.log(users[0]);
     }
   }, [router]);
+
+
+
 
   return (
     <>
@@ -219,6 +246,7 @@ const Index = () => {
             </ul>
             <AdviceField addToAdvice={addToAdvice} />
           </div>
+          <button onClick={() => { handleSubmit(prescriptionForm, router.query.patientId) }} type='submit' className='btn text-white btn-success px-10 mx-3'>Submit</button>
         </div>
       </div>
     </>

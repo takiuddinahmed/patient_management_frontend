@@ -1,46 +1,29 @@
-import React, { useState } from 'react';
-import { DoseTime, IPrescriptionForm, TimeType } from '../../api_calls/doctor/prescription.api';
+import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
+import { DoseTime, initialPrescriptionForm, IPrescriptionForm, TimeType } from '../../api_calls/doctor/prescription.api';
 import Navbar from '../../components/layouts/navbar.component';
-
-
-const pharmacyMockData: IPrescriptionForm = {
-    medicines: [
-
-        {
-            name: "Tab.Napa",
-            dose: "1+0+1",
-            doseTime: DoseTime.AM,
-            time: 5,
-            timeType: TimeType.days,
-        },
-        {
-            name: "Tab.Alactrol",
-            dose: "1+1+1",
-            doseTime: DoseTime.AM,
-            time: 5,
-            timeType: TimeType.days,
-        },
-        {
-            name: "Inj.Maxsuline",
-            dose: "1+0+1",
-            doseTime: DoseTime.BM,
-            time: 5,
-            timeType: TimeType.month,
-        }
+import { IUser, users } from '../../interface/user.interface';
 
 
 
-    ],
-    complaints: [],
-    investigations: [],
-    diagnosis: [],
-    observation: [],
-    advices: [],
-
-}
 const Index = () => {
     const [prescriptionForm, setPrescriptionForm] = useState<IPrescriptionForm>(
-        pharmacyMockData);
+        initialPrescriptionForm);
+
+    const router = useRouter();
+    const [doctor, setDoctor] = useState<IUser | null>({});
+    const [patient, setPatient] = useState<any>(null);
+    useEffect(() => {
+        if (router.isReady) {
+            const { patientId } = router.query;
+            const user = users.filter((u) => u.cardId == patientId);
+            if (user.length) {
+                setPatient(user[0]);
+            } else setPatient(users[0]);
+
+            console.log(users[0]);
+        }
+    }, [router]);
     return (
         <div>
             <Navbar login={true} user={''}></Navbar>

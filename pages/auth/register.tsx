@@ -83,13 +83,14 @@ const Register = () => {
     }
   }, [loginFormData]);
 
-
+  const colRef = collection(db, "users")
   const handleSubmit = async () => {
     console.log(loginFormData);
     console.log(error);
 
-    const colRef = collection(db, 'User-Info')
+
     await addDoc(colRef, userData)
+
 
     try {
       const email = loginFormData.email;
@@ -99,10 +100,10 @@ const Register = () => {
       alert("Register Failed. Try again");
     }
 
-
+    console.log(userData, 'from regestration')
   };
-  console.log(userData, 'from regestration')
-  // console.log(loginFormData, 'from regestration loginform data')
+
+
   return (
     <>
       <Main>

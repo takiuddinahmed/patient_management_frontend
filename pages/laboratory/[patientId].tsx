@@ -1,34 +1,30 @@
-import React, { useState } from 'react';
-import { IPrescriptionForm } from '../../api_calls/doctor/prescription.api';
+import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
+import { initialPrescriptionForm, IPrescriptionForm } from '../../api_calls/doctor/prescription.api';
 import Navbar from '../../components/layouts/navbar.component';
+import { IUser, users } from '../../interface/user.interface';
 
 
-const labMockData: IPrescriptionForm = {
-    medicines: [],
 
-
-    complaints: ['Fever', 'Headache', 'Cold'],
-    investigations: [
-        "ECG",
-        "CT-scan",
-        "X-ray",
-        "TSH",
-        "FT4",
-        "FT3",
-        "S Calcium",
-        "Para Thyroid Hormone",
-        "RBS",
-        "FBS",
-        "OGTT"
-    ],
-    diagnosis: ['Covid-19', 'Diabetics'],
-    observation: [],
-    advices: [],
-
-}
 const Index = () => {
     const [prescriptionForm, setPrescriptionForm] = useState<IPrescriptionForm>(
-        labMockData);
+        initialPrescriptionForm);
+
+    const router = useRouter();
+    const [doctor, setDoctor] = useState<IUser | null>({});
+    const [patient, setPatient] = useState<any>(null);
+    useEffect(() => {
+        if (router.isReady) {
+            const { patientId } = router.query;
+            const user = users.filter((u) => u.cardId == patientId);
+            if (user.length) {
+                setPatient(user[0]);
+            } else setPatient(users[0]);
+
+            console.log(users[0]);
+        }
+    }, [router]);
+
     return (
         <>
             <Navbar login={true} user={''}></Navbar>
