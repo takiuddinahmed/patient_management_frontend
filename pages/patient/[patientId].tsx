@@ -1,118 +1,72 @@
-import React, { useState } from 'react';
-import { DoseTime, IPrescriptionForm, TimeType } from '../../api_calls/doctor/prescription.api';
+import { collection, getDocs, orderBy, query } from 'firebase/firestore';
+import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
+import { DoseTime, initialPrescriptionForm, IPrescriptionForm, TimeType } from '../../api_calls/doctor/prescription.api';
+import { db } from '../../components/firebase';
 import Navbar from '../../components/layouts/navbar.component';
-
-
-const patientMockData: IPrescriptionForm = {
-    medicines: [
-
-        {
-            name: "Tab.Napa",
-            dose: "1+0+1",
-            doseTime: DoseTime.AM,
-            time: 5,
-            timeType: TimeType.days,
-        },
-        {
-            name: "Tab.Alactrol",
-            dose: "1+1+1",
-            doseTime: DoseTime.AM,
-            time: 5,
-            timeType: TimeType.days,
-        },
-        {
-            name: "Inj.Maxsuline",
-            dose: "1+0+1",
-            doseTime: DoseTime.BM,
-            time: 5,
-            timeType: TimeType.month,
-        }
+import { IUser, users } from '../../interface/user.interface';
 
 
 
-    ],
-
-
-    complaints: ['Fever', 'Headache', 'Cold'],
-    investigations: ["ECG", "CT-scan", "X-ray"],
-    diagnosis: [
-        ' Myocardial Infarction ST elevated '
-        , 'Myocardial Infarction Non-ST elevated'
-        , 'Unstable Angina'
-        , ' Heart Failure'
-        , ' Angina Pectoris'
-        , '1st Degree Heart Block'
-        , '2nd Degree Heart Block'
-        , '3rd Degree Heart Block'
-        , 'Left Bundle Brunch Lock'
-        , 'Right Bundle Brunch Lock'
-        , 'Rheumatic Heart Disease'
-        , 'Stroke(Ischemic Stroke & Hemorrhagic Stroke)'
-        , 'Spinal Cord Injury'
-        , 'Headache'
-        , 'Migraine'
-        , 'Gulliane Bari Syndrome'
-        , 'Transverse Myelitis'
-        , 'Cerebellar Hemorrhage'
-        , 'Parkinson’s Disease'
-        , 'Meningitis'
-        , 'Encephalitis'
-        , 'AKI'
-        , 'CKD'
-        , 'Renal Failure'
-        , 'Acute Retention of Urine'
-        , 'Nephrotic Syndrome'
-        , 'Acute Glomerulo Nephritis'
-        , 'IGA Nephropathy'
-        , 'Renal Stone'
-        , 'Hyperthyroidism'
-        , 'Diabetes Mellitus'
-        , 'Hypo Para Thyroidism'
-        , 'Critinism'
-        , 'Graves Disease'
-        , 'Diabetes Incipidus'
-        , 'Dwarfism'
-        , 'Gigantism'
-        , 'Scabis'
-        , 'Dermatitis'
-        , 'Eczema'
-        , 'Ring Warm'
-        , 'Vitiligo'
-        , 'Hair Fall'
-        , 'Acne Vulgaris'
-        , 'Herpes'
-        , 'Syphilis'
-        , 'Gonorrhea'
-        , 'Depressive Disorder'
-        , 'Bipolar Mode Disorder'
-        , 'Somatoform Disorder'
-        , 'Acute Psychosis'
-        , 'Schizophrenia'
-        , 'Generalized Anxiety Disorder'
-        , 'Conversion Disorder'],
-
-    observation: [
-
-        {
-            name: 'BP',
-            value: 90
-        },
-        {
-            name: 'Blood Sugar',
-            value: "126 mg/dL"
-        }
-
-
-
-    ],
-    advices: ['Slow Paced Running everyday', 'No heavy lifting works'],
-
-}
 
 const Index = () => {
-    const [prescriptionForm, setPrescriptionForm] = useState<IPrescriptionForm>(
-        patientMockData
-    );
+    // const [prescriptionForm, setPrescriptionForm] = useState<IPrescriptionForm>(
+    //     initialPrescriptionForm
+    // );
+
+    const [presData, setPresData] = useState<any>([])
+
+
+    const router = useRouter();
+
+    const [patient, setPatient] = useState<any>(null);
+    useEffect(() => {
+        if (router.isReady) {
+            const { patientId } = router.query;
+            const user = users.filter((u) => u.cardId == patientId);
+            if (user.length) {
+                setPatient(user[0]);
+            } else setPatient(users[0]);
+
+            console.log(users[0]);
+        }
+    }, [router]);
+
+
+    const colRef = collection(db, "prescription");
+    const q = query(colRef, orderBy("createdAt", "asc"))
+
+
+
+    useEffect(() => {
+        const getFireStoreData = async () => {
+            const prescriptionData = await getDocs(q);
+
+            setPresData(prescriptionData.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+        }
+
+
+        getFireStoreData()
+
+
+
+    }, []);
+
+
+
+
+    //  getting the latest DATA of the Patient
+    let A = []
+    for (let i = 0; i <= presData.length; i++) {
+        if (presData[i]?.patientID == router.query.patientId) {
+            A.push(presData[i])
+        }
+    }
+    let recentPresData = []
+    recentPresData = A[A.length - 1]
+
+    console.log(recentPresData?.complaints)
+
 
     return (
         <>
@@ -125,7 +79,7 @@ const Index = () => {
                             Chief Complaints :{" "}
                         </span>
                         <ul className="list-disc m-3">
-                            {prescriptionForm.complaints.map((complain) => (
+                            {recentPresData?.complaints?.map((complain: any) => (
                                 <li key={complain}>
                                     {complain}
                                 </li>
@@ -149,7 +103,7 @@ const Index = () => {
                             On Examination:{" "}
                         </span>
                         <ul className="list-disc m-3">
-                            {prescriptionForm.observation.map((obs) => (
+                            {recentPresData?.observation?.map((obs: any) => (
                                 <li key={obs.name}>
                                     <span className="p-2 text-lg">
                                         {obs.name}: {obs.value}{" "}
@@ -164,9 +118,23 @@ const Index = () => {
                             Investigation :{" "}
                         </span>
                         <ul className="list-disc m-3">
-                            {prescriptionForm.investigations.map((inv) => (
+                            {recentPresData?.investigation?.map((inv: any) => (
 
                                 <li key={inv}>{inv}</li>
+                            ))}
+                        </ul>
+
+                    </div>
+                    <div className="my-2">
+                        <span className="border-b-2 border-gray-400  font-semibold">
+                            {" "}
+                            Differential Diagnosis :{" "}
+                        </span>
+                        <ul className="list-disc m-3">
+                            {recentPresData?.differential?.map((dif: any) => (
+                                <li key={dif}>
+                                    <span className="p-2 text-lg">{dif} </span>
+                                </li>
                             ))}
                         </ul>
 
@@ -177,7 +145,7 @@ const Index = () => {
                             Diagnosis :{" "}
                         </span>
                         <ul className="list-disc m-3">
-                            {prescriptionForm.diagnosis.map((dia) => (
+                            {recentPresData?.diagnosis?.map((dia: any) => (
 
                                 <li key={dia}>{dia}</li>
                             ))}
@@ -188,9 +156,9 @@ const Index = () => {
 
                 <div className="mr-5 col-span-2 border-l-2 border-cyan-600 h-screen">
                     <div className="flex  justify-around text-lg py-2 border-b-2 border-cyan-600">
-                        <span>Name: </span>
-                        <span>Age: </span>
-                        <span>Sex: </span>
+                        <span>Name: {patient?.firstName} {patient?.lastName} </span>
+                        <span>Age:{patient?.age} </span>
+                        <span>Sex:{patient?.sex} </span>
                     </div>
                     <div>
                         <div className="p-3">
@@ -199,7 +167,7 @@ const Index = () => {
                                 RX :{" "}
                             </span>
                             <ol className="list-decimal m-3">
-                                {prescriptionForm.medicines.map((pres) => (
+                                {recentPresData?.medicine?.map((pres: any) => (
                                     <li key={pres.name}>
                                         <span className="p-2 text-lg">{pres.name} </span> <br />
                                         <span className="p-2"> {pres.dose} </span>
@@ -223,7 +191,7 @@ const Index = () => {
                         </span>
                         <ul className="list-disc m-3">
 
-                            {prescriptionForm.advices.map((adv) => (
+                            {recentPresData?.advices?.map((adv: any) => (
 
                                 <li key={adv}>{adv}</li>
                             ))}

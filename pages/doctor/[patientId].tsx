@@ -17,7 +17,7 @@ import RxForm from "../../components/form/rx.component";
 import Navbar from "../../components/layouts/navbar.component";
 import { IUser, users } from "../../interface/user.interface";
 import { getLocalHostData } from "../../utils/getLocalData.util";
-import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
 
 const Index = () => {
   const [prescriptionForm, setPrescriptionForm] = useState<IPrescriptionForm>(
@@ -87,7 +87,8 @@ const Index = () => {
       investigation: prescriptionForm.investigations,
       medicine: prescriptionForm.medicines,
       observation: prescriptionForm.observation,
-      patientId: patientId
+      patientID: patientId,
+      createdAt: serverTimestamp(),
 
 
     })

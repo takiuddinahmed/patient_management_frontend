@@ -1,17 +1,22 @@
+import { collection, getDocs, orderBy, query } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { DoseTime, initialPrescriptionForm, IPrescriptionForm, TimeType } from '../../api_calls/doctor/prescription.api';
+import { db } from '../../components/firebase';
 import Navbar from '../../components/layouts/navbar.component';
 import { IUser, users } from '../../interface/user.interface';
 
 
 
 const Index = () => {
-    const [prescriptionForm, setPrescriptionForm] = useState<IPrescriptionForm>(
-        initialPrescriptionForm);
+    // const [prescriptionForm, setPrescriptionForm] = useState<IPrescriptionForm>(
+    //     initialPrescriptionForm);
+
+    const [presData, setPresData] = useState<any>([])
+
 
     const router = useRouter();
-    const [doctor, setDoctor] = useState<IUser | null>({});
+
     const [patient, setPatient] = useState<any>(null);
     useEffect(() => {
         if (router.isReady) {
@@ -24,13 +29,50 @@ const Index = () => {
             console.log(users[0]);
         }
     }, [router]);
+
+
+    const colRef = collection(db, "prescription");
+    const q = query(colRef, orderBy("createdAt", "asc"))
+
+
+
+    useEffect(() => {
+        const getFireStoreData = async () => {
+            const prescriptionData = await getDocs(q);
+
+            setPresData(prescriptionData.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+        }
+
+
+        getFireStoreData()
+
+
+
+    }, []);
+
+
+
+
+    //  getting the latest DATA of the Patient
+    let A = []
+    for (let i = 0; i <= presData.length; i++) {
+        if (presData[i]?.patientID == router.query.patientId) {
+            A.push(presData[i])
+        }
+    }
+    let recentPresData = []
+    recentPresData = A[A.length - 1]
+
+
+
     return (
         <div>
             <Navbar login={true} user={''}></Navbar>
 
             <div>
+                <div className='text-2xl px-5 py-3'><span className='mx-3'>Name: {patient?.firstName} {patient?.lastName}</span>  <span className='mx-3'>Age:{patient?.age}</span></div>
 
-                <div className="overflow-x-auto w-3/5 mx-auto mt-5 ">
+                <div className="w-3/5 mx-auto mt-5 ">
                     <table className="table w-full ">
 
                         <thead>
@@ -44,9 +86,9 @@ const Index = () => {
                         <tbody >
 
 
-                            {prescriptionForm.medicines.map((pres) => (
+                            {recentPresData?.medicine?.map((pres: any) => (
 
-                                <tr className='text-2xl hover' key={pres.name} >
+                                <tr className='text-2xl hover:bg-slate-200' key={pres.name} >
 
                                     <td>{pres.name}</td>
                                     <td>{pres.dose}</td>
