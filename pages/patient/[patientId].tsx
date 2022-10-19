@@ -90,16 +90,6 @@ const Index = () => {
                     </div>
                     <div className="my-2">
                         <span className="border-b-2 border-gray-400  font-semibold">
-                            {" "}
-                            Past History :{" "}
-                        </span>
-                        <ul className="list-decimal m-3">
-
-                        </ul>
-
-                    </div>
-                    <div className="my-2">
-                        <span className="border-b-2 border-gray-400  font-semibold">
                             On Examination:{" "}
                         </span>
                         <ul className="list-disc m-3">

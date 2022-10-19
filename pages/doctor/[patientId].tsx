@@ -134,12 +134,7 @@ const Index = () => {
             </ul>
             <CcForm addToComplaint={addToComplaint} />
           </div>
-          <div className="my-2">
-            <span className="border-b-2 border-gray-400  font-semibold">
-              {" "}
-              Past History :{" "}
-            </span>
-          </div>
+
           <div className="my-2">
             <span className="border-b-2 border-gray-400  font-semibold">
               On Examination:{" "}
