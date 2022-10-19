@@ -45,15 +45,21 @@ interface IProp {
 
 
 const InvestigationForm: FC<IProp> = ({ addToInvestigation }) => {
+
     const [investigationForm, setInvestigationForm] = useState<string | null | undefined>('')
+
     const updateInvestigationForm = (value: string) => {
         setInvestigationForm(value)
     }
+
+
     const handleSubmit = () => {
         console.log(investigationForm);
         addToInvestigation(investigationForm)
         setInvestigationForm('')
     }
+
+
     return (
         <div className='mt-2 rounded ml-3'>
             <form onSubmit={(e) => { e.preventDefault(); handleSubmit() }} className='flex flex:row'>
