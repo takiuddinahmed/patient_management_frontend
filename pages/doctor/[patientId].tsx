@@ -18,6 +18,7 @@ import Navbar from "../../components/layouts/navbar.component";
 import { IUser, users } from "../../interface/user.interface";
 import { getLocalHostData } from "../../utils/getLocalData.util";
 import { addDoc, collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
+import Link from "next/link";
 
 const Index = () => {
   const [prescriptionForm, setPrescriptionForm] = useState<IPrescriptionForm>(
@@ -112,7 +113,7 @@ const Index = () => {
     }
   }, [router]);
 
-
+  // const patientId = router.query.patientId
 
 
   return (
@@ -133,6 +134,21 @@ const Index = () => {
               ))}
             </ul>
             <CcForm addToComplaint={addToComplaint} />
+          </div>
+          <div className="my-2">
+            <span className="border-b-2 border-gray-400  font-semibold">
+              Past Reports:{" "}
+            </span> <br /> <br />
+            <Link href={{
+              pathname: "/doctor/pastreports/[patientId]",
+              query: {
+                patientId: router.query.patientId
+              }
+            }}>
+              <a className="no-underline hover:underline">
+                Past Reports
+              </a>
+            </Link>
           </div>
 
           <div className="my-2">

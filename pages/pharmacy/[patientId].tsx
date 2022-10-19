@@ -1,3 +1,4 @@
+import { Autocomplete, TextField } from '@mui/material';
 import { collection, getDocs, orderBy, query } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -13,6 +14,7 @@ const Index = () => {
     //     initialPrescriptionForm);
 
     const [presData, setPresData] = useState<any>([])
+    const [pastHistory, setPastHistory] = useState<any>([])
 
 
     const router = useRouter();
@@ -54,24 +56,72 @@ const Index = () => {
 
 
     //  getting the latest DATA of the Patient
-    let A = []
-    for (let i = 0; i <= presData.length; i++) {
-        if (presData[i]?.patientID == router.query.patientId) {
-            A.push(presData[i])
-        }
-    }
-    let recentPresData = []
-    recentPresData = A[A.length - 1]
+    let datePresData = []
+    let patientPresData: any[] = []
 
+
+
+
+    for (let i = 0; i <= presData.length; i++) {
+
+        if (presData[i]?.patientID == router.query.patientId) {
+            datePresData.push(presData[i]?.createdAt.toDate().toString())
+
+        }
+        if (presData[i]?.createdAt.toDate().toString() == pastHistory && presData[i]?.patientID == router.query.patientId) {
+            patientPresData.push(presData[i])
+        }
+
+    }
+
+    let recentPresData = []
+    recentPresData = patientPresData[0]
+
+
+
+    const handleSubmit = () => {
+
+
+        setPastHistory('')
+    }
 
 
     return (
         <div>
             <Navbar login={true} user={''}></Navbar>
 
-            <div>
-                <div className='text-2xl px-5 py-3'><span className='mx-3'>Name: {patient?.firstName} {patient?.lastName}</span>  <span className='mx-3'>Age:{patient?.age}</span></div>
+            <div className='flex '>
 
+                <div>
+                    <div className='text-2xl px-5 py-3'><span className='mx-3'>Name: {patient?.firstName} {patient?.lastName}</span>  <span className='mx-3'>Age:{patient?.age}</span></div>
+                    <div className="ml-5 p-3">
+
+                        <div className="my-2 ">
+                            <span className="border-b-2 border-gray-400  my-2 font-semibold">
+                                {" "}
+                                Prescription List :{" "}
+                            </span>
+                            <form onSubmit={(e) => { e.preventDefault(); handleSubmit() }} className='flex flex:row'>
+                                <div className='py-3'>
+                                    <Autocomplete
+
+                                        onChange={(e, value) => setPastHistory(value || "")}
+                                        disablePortal
+                                        id="combo-box-demo"
+                                        options={datePresData}
+                                        sx={{ width: 300 }}
+                                        renderInput={(params) => <TextField  {...params} label=""
+
+
+                                        />}
+                                    />
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
                 <div className="w-3/5 mx-auto mt-5 ">
                     <table className="table w-full ">
 

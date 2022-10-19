@@ -52,7 +52,7 @@ const Index = () => {
 
 
 
-    }, [q]);
+    }, []);
 
 
 
@@ -88,7 +88,7 @@ const Index = () => {
 
 
     const handleSubmit = () => {
-        console.log();
+
 
         setPastHistory('')
     }
@@ -109,7 +109,7 @@ const Index = () => {
                             <div className='py-3'>
                                 <Autocomplete
 
-                                    value={""} onChange={(e, value) => setPastHistory(value || "")}
+                                    onChange={(e, value) => setPastHistory(value || "")}
                                     disablePortal
                                     id="combo-box-demo"
                                     options={datePresData}

@@ -1,4 +1,5 @@
 import type { NextPage } from "next";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Button from "../../components/basic/button.component";
@@ -16,8 +17,10 @@ const Home: NextPage = () => {
   const [rfid, setRfid] = useState<string>("");
   const [read, setRead] = useState<number>(0);
   const [user, setUser] = useState<IUser | null>(null);
+  const [patientId, setPatientId] = useState<string>("")
   const [showCard, setShowCard] = useState<boolean>(false);
   const router = useRouter();
+
 
 
   const showPatient = () => {
@@ -57,6 +60,29 @@ const Home: NextPage = () => {
           ) : (
             <CardShow />
           )}
+
+          <div className="mt-5">
+            <span className="text-2xl">Access Patient Manually</span>
+            <form onSubmit={(e) => { e.preventDefault(); }} >
+              <div className="form-control w-full max-w-xs px-3 mt-4">
+
+                <input value={patientId} onChange={(e) => setPatientId(e.target.value)} type="text" placeholder="Card Number" className="input input-bordered border-info w-full max-w-xs" />
+
+              </div>
+              <button type='submit' className='btn bg-cyan-600 text-white lg:mt-6 ms-5 mx-5'>
+                <Link href={{
+                  pathname: "/doctor/[patientId]",
+                  query: {
+                    patientId: patientId
+                  }
+                }}>
+                  <a className="no-underline hover:underline">
+                    Access Patient
+                  </a>
+                </Link>
+              </button>
+            </form>
+          </div>
         </div>
       </>
     );
