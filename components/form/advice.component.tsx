@@ -12,7 +12,7 @@ const AdviceField: FC<IProp> = ({ addToAdvice }) => {
     }
 
     const handleSubmit = () => {
-        console.log(adviceForm);
+
         addToAdvice(adviceForm)
         setAdviceForm('')
     }

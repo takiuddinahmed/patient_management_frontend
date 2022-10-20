@@ -17,6 +17,8 @@ const Index = () => {
     const [pastHistory, setPastHistory] = useState<any>([])
 
 
+
+
     const router = useRouter();
 
     const [patient, setPatient] = useState<any>(null);

@@ -34,15 +34,11 @@ const Register = () => {
     createUserError,
   ] = useCreateUserWithEmailAndPassword(auth);
 
-  const [userData, setUserData] = useState<IUserData>(initialUserData)
-
-
-
 
   const router = useRouter();
   const [loginFormData, setLoginFormData] =
     useState<IRegisterForm>(initialLoginFormData);
-
+  let userData = {}
 
 
 
@@ -53,15 +49,12 @@ const Register = () => {
     setLoginFormData((value) => {
       return { ...value, [field]: inputValue };
     });
-
-    setUserData((value) => {
-      return { ...value, [field]: inputValue };
-    });
   };
   const updateLoginFormError = (field: string, inputValue: string) => {
     setError((value) => {
       return { ...value, [field]: inputValue };
     });
+
   };
 
 
@@ -83,25 +76,50 @@ const Register = () => {
     }
   }, [loginFormData]);
 
-  const colRef = collection(db, "users")
+
+
   const handleSubmit = async () => {
     console.log(loginFormData);
     console.log(error);
-
-
-    await addDoc(colRef, userData)
-
-
     try {
       const email = loginFormData.email;
       const password = loginFormData.password;
-      createUserWithEmailAndPassword(email, password)
+      await createUserWithEmailAndPassword(email, password)
     } catch (err) {
       alert("Register Failed. Try again");
     }
-
-    console.log(userData, 'from regestration')
   };
+
+
+  if (user) {
+    userData =
+    {
+      firstName: loginFormData.firstName,
+      lastName: loginFormData.lastName,
+      age: loginFormData.age,
+      sex: loginFormData.sex,
+      email: loginFormData.email,
+      userRole: loginFormData.userRole,
+      cardId: loginFormData.cardId,
+      doctorType: loginFormData.doctorType,
+      uid: user.user.uid
+
+
+    }
+
+  }
+
+  useEffect(() => {
+    if (user) {
+      const colRef = collection(db, "users")
+      addDoc(colRef, userData)
+    }
+  }, [user])
+
+
+
+
+
 
 
   return (

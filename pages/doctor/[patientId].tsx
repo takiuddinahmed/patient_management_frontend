@@ -6,7 +6,7 @@ import {
   IObservation,
   IPrescriptionForm,
 } from "../../api_calls/doctor/prescription.api";
-import { db } from "../../components/firebase";
+import { auth, db } from "../../components/firebase";
 import AdviceField from "../../components/form/advice.component";
 import CcForm from "../../components/form/cc.component";
 import DifferentialForm from "../../components/form/differential.component";
@@ -17,16 +17,18 @@ import RxForm from "../../components/form/rx.component";
 import Navbar from "../../components/layouts/navbar.component";
 import { IUser, users } from "../../interface/user.interface";
 import { getLocalHostData } from "../../utils/getLocalData.util";
-import { addDoc, collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs, serverTimestamp, setDoc } from "firebase/firestore";
 import Link from "next/link";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const Index = () => {
   const [prescriptionForm, setPrescriptionForm] = useState<IPrescriptionForm>(
     initialPrescriptionForm
   );
   const router = useRouter();
-  const [doctor, setDoctor] = useState<IUser | null>({});
   const [patient, setPatient] = useState<any>(null);
+  const [doctorData, setDoctorData] = useState<any>([])
+
 
   const addToMedicine = (medicine: IMedicine) => {
     setPrescriptionForm((prev) => ({
@@ -73,10 +75,52 @@ const Index = () => {
     }));
   };
 
+
+
+  const user = auth.currentUser;
+  let doctor: any[] = [];
+  if (user) {
+
+
+
+    for (let i = 0; i <= doctorData.length; i++) {
+
+      if (doctorData[i]?.uid === user.uid) {
+
+        doctor.push(doctorData[i])
+
+
+      }
+
+    }
+  }
+
+
   const colRef = collection(db, "prescription")
+  const colRefDoc = collection(db, "users")
+
+  useEffect(() => {
+    const getFireStoreData = async () => {
+      const prescriptionData = await getDocs(colRefDoc);
+
+      setDoctorData(prescriptionData.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+    }
 
 
-  const handleSubmit = async (prescriptionForm: IPrescriptionForm, patientId: string | string[] | undefined) => {
+    getFireStoreData()
+
+  }, []);
+
+
+
+
+
+
+  console.log(doctor[0])
+
+
+
+  const handleSubmit = async (prescriptionForm: IPrescriptionForm, patientId: string | string[] | undefined, doctor: { firstName: string; lastName: string; }) => {
 
 
 
@@ -90,6 +134,8 @@ const Index = () => {
       observation: prescriptionForm.observation,
       patientID: patientId,
       createdAt: serverTimestamp(),
+      doctorFirstName: doctor.firstName,
+      doctorLastName: doctor.lastName,
 
 
     })
@@ -97,9 +143,6 @@ const Index = () => {
 
   }
 
-  useEffect(() => {
-    console.log({ prescriptionForm });
-  }, [prescriptionForm]);
 
   useEffect(() => {
     if (router.isReady) {
@@ -113,7 +156,6 @@ const Index = () => {
     }
   }, [router]);
 
-  // const patientId = router.query.patientId
 
 
   return (
@@ -258,7 +300,7 @@ const Index = () => {
             </ul>
             <AdviceField addToAdvice={addToAdvice} />
           </div>
-          <button onClick={() => { handleSubmit(prescriptionForm, router.query.patientId) }} type='submit' className='btn text-white btn-success px-10 mx-3'>Submit</button>
+          <button onClick={() => { handleSubmit(prescriptionForm, router.query.patientId, doctor[0]) }} type='submit' className='btn text-white btn-success px-10 mx-3'>Submit</button>
         </div>
       </div>
     </>
