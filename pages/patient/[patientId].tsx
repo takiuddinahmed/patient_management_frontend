@@ -51,7 +51,7 @@ const Index = () => {
 
 
 
-    }, [q]);
+    }, []);
 
 
 
@@ -66,7 +66,6 @@ const Index = () => {
     let recentPresData = []
     recentPresData = A[A.length - 1]
 
-    console.log(recentPresData?.complaints)
 
 
     return (
@@ -74,6 +73,10 @@ const Index = () => {
             <Navbar login={true} user={''}></Navbar>
             <div className="grid grid-cols-3 gap-4">
                 <div className="ml-5">
+                    <div className="mt-2  text-2xl text-cyan-700">
+                        <span>Dr :</span>{recentPresData?.doctorFirstName} {recentPresData?.doctorLastName}
+                    </div>
+
                     <div className="my-2">
                         <span className="border-b-2 border-gray-400 font-semibold">
                             {" "}
@@ -85,7 +88,6 @@ const Index = () => {
                                     {complain}
                                 </li>
                             ))}
-
                         </ul>
 
                     </div>
@@ -204,6 +206,7 @@ const Index = () => {
                         </ul>
 
                     </div>
+
                 </div>
             </div>
         </>

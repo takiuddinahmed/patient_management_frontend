@@ -95,9 +95,12 @@ const Index = () => {
             <div className='flex '>
 
                 <div>
+
                     <div className='text-2xl px-5 py-3'><span className='mx-3'>Name: {patient?.firstName} {patient?.lastName}</span>  <span className='mx-3'>Age:{patient?.age}</span></div>
                     <div className="ml-5 p-3">
-
+                        <div className="mt-2  text-2xl text-cyan-700">
+                            <span>Dr :</span> {recentPresData?.doctorFirstName} {recentPresData?.doctorLastName}
+                        </div>
                         <div className="my-2 ">
                             <span className="border-b-2 border-gray-400  my-2 font-semibold">
                                 {" "}

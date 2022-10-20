@@ -80,10 +80,6 @@ const Index = () => {
     recentPresData = patientPresData[0]
 
 
-    // console.log(datePresData)
-    // console.log(pastHistory)
-    // console.log("patient-pres-data", patientPresData)
-    // console.log("date-pres-data", datePresData)
 
 
 
@@ -99,7 +95,9 @@ const Index = () => {
             <Navbar login={true} user={''}></Navbar>
             <div className="grid grid-cols-3 ">
                 <div className="ml-5 p-3">
-
+                    <div className="mt-2  text-2xl text-cyan-700">
+                        <span>Dr :</span> {recentPresData?.doctorFirstName} {recentPresData?.doctorLastName}
+                    </div>
                     <div className="my-2 ">
                         <span className="border-b-2 border-gray-400  my-2 font-semibold">
                             {" "}
