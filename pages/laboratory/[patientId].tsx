@@ -10,8 +10,6 @@ import { IUser, users } from '../../interface/user.interface';
 
 
 const Index = () => {
-    // const [prescriptionForm, setPrescriptionForm] = useState<IPrescriptionForm>(
-    //     initialPrescriptionForm);
 
     const [presData, setPresData] = useState<any>([])
     const [pastHistory, setPastHistory] = useState<any>([])
@@ -79,6 +77,24 @@ const Index = () => {
 
 
 
+    const [labForm, setLabForm] = useState<any>({})
+    const [labData, setLabData] = useState<any>([])
+    const updateLabForm = (field: string, value: any) => {
+        setLabForm((preValue: any) => ({ ...preValue, [field]: value }))
+    }
+    let data: any[] = []
+
+    const addLabData = () => {
+        data.push(labForm)
+        setLabData([...labData, ...data])
+        console.log(labData)
+
+    }
+
+
+
+
+
     const handleSubmit = () => {
 
 
@@ -107,7 +123,7 @@ const Index = () => {
                                 {" "}
                                 Prescription List :{" "}
                             </span>
-                            <form onSubmit={(e) => { e.preventDefault(); handleSubmit() }} className='flex flex:row'>
+                            <form onSubmit={(e) => { e.preventDefault() }} className='flex flex:row'>
                                 <div className='py-3'>
                                     <Autocomplete
 
@@ -127,6 +143,35 @@ const Index = () => {
 
                         </div>
                     </div>
+
+                    <div>
+
+                    </div>
+                    <div>
+                        <form onSubmit={(e) => { e.preventDefault(); handleSubmit() }}>
+
+                            <div className='flex  lg:flex-row items-center'>
+                                <div className="form-control  w-full max-w-xs px-3">
+                                    <span className="label-text">Test</span>
+                                    <div className='flex lg:flex-row  justify-center items-center '>
+                                        <input value={labForm.name} onChange={(e) => updateLabForm('name', e.target.value)} type="text" placeholder='Name' className="input input-bordered  mt-1.5 border-info w-full max-w-xs" />
+
+                                    </div>
+                                </div>
+
+                                <div className="form-control  w-full max-w-xs px-3">
+                                    <span className="label-text">Value</span>
+                                    <div className='flex lg:flex-row  justify-center items-center '>
+                                        <input value={labForm.value} onChange={(e) => updateLabForm('value', e.target.value)} type="text" placeholder='Value' className="input input-bordered  mt-1.5 border-info w-full max-w-xs" />
+
+                                    </div>
+                                </div>
+                                <button onClick={addLabData} type='submit' className='btn btn-success text-white mt-7'>ADD</button>
+                            </div>
+                        </form>
+                    </div>
+
+
                 </div>
                 <div className=" w-3/5 mx-auto mt-5 ">
 

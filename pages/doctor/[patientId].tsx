@@ -139,8 +139,9 @@ const Index = () => {
 
 
     })
-
-
+    alert('Prescription Submitted')
+    router.push('/doctor')
+    setPrescriptionForm(initialPrescriptionForm)
   }
 
 
