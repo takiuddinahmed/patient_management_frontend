@@ -11,9 +11,7 @@ import { IUser, users } from '../../../interface/user.interface';
 
 
 const Index = () => {
-    // const [prescriptionForm, setPrescriptionForm] = useState<IPrescriptionForm>(
-    //     initialPrescriptionForm
-    // );
+
 
     const [presData, setPresData] = useState<any>([])
     const [pastHistory, setPastHistory] = useState<any>([])
@@ -237,12 +235,47 @@ const Index = () => {
 
                             </div>
 
+                            <div className="mt-10">
+                                <span className="border-b-2 border-gray-400  font-semibold">
+                                    Test Results:{" "}
+                                </span>
+                                <table className="table  p-5 mt-3">
+
+                                    <thead>
+                                        <tr>
+                                            <th className='text-bold text-center'>Test Name</th>
+                                            <th className='text-bold text-center'>Value</th>
+                                            <th className='text-bold text-center'>Normal Value</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className='text-center'>
+                                        {recentPresData?.testResults?.labData.map((obs: any) => (
+                                            <tr key={obs.testName}>
+
+
+                                                <td className='hover:bg-slate-200'> {obs.testName}</td>
+                                                <td className='hover:bg-slate-200'>  {obs.value}{" "}</td>
+                                                <td className='hover:bg-slate-200'>  {obs.normalValue}{" "}</td>
+
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+
+                            </div>
 
                         </div>
 
                     </div>
+
+                    <div className='m-20'>
+                        <img style={{ height: " 500px", width: "auto" }} src={recentPresData?.testResults?.url} />
+                    </div>
                 </div>
+
             </div>
+
+
         </>
     );
 };
