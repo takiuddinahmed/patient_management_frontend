@@ -1,9 +1,11 @@
 import { Autocomplete, TextField } from '@mui/material';
-import { collection, getDoc, getDocs, orderBy, query } from 'firebase/firestore';
+import { collection, doc, getDocs, orderBy, query, updateDoc } from 'firebase/firestore';
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { initialPrescriptionForm, IPrescriptionForm } from '../../api_calls/doctor/prescription.api';
-import { db } from '../../components/firebase';
+import { ILabData, ILabDataForm, initialLabData } from '../../api_calls/lab/lab.api';
+import { db, storage } from '../../components/firebase';
+import LabData from '../../components/form/lab.component';
 import Navbar from '../../components/layouts/navbar.component';
 import { IUser, users } from '../../interface/user.interface';
 
@@ -13,6 +15,9 @@ const Index = () => {
 
     const [presData, setPresData] = useState<any>([])
     const [pastHistory, setPastHistory] = useState<any>([])
+
+    const [labData, setLabData] = useState<ILabData>(initialLabData)
+
 
 
     const router = useRouter();
@@ -53,6 +58,7 @@ const Index = () => {
 
 
 
+
     //  getting the latest DATA of the Patient
     let datePresData = []
     let patientPresData: any[] = []
@@ -72,34 +78,73 @@ const Index = () => {
 
     }
 
-    let recentPresData = []
+    let recentPresData: any = []
     recentPresData = patientPresData[0]
+    console.log(recentPresData)
+
+    const addToLab = (data: ILabDataForm) => {
+        setLabData((prev) => ({
+            ...prev,
+            labData: [...prev.labData, data],
+        }));
+    };
+
+    // file uploading and getting img url
+    const formHandler = (e: any) => {
+        e.preventDefault();
+        const file = e.target[0].files[0];
+
+        if (recentPresData == undefined) {
+            alert('please select a prescription')
+        }
+        else {
+            uploadFiles(file);
+        }
+
+    };
+
+
+    const patientRef = doc(db, "prescription", `${recentPresData?.id}`)
+    const uploadFiles = (file: any) => {
+        if (!file) return;
+
+        const sotrageRef = ref(storage, `files`);
+        const uploadTask = uploadBytesResumable(sotrageRef, file);
+
+        uploadTask.on(
+            "state_changed",
+
+
+            () => {
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+
+                    // console.log("File available at", downloadURL);
+                    // updating data
+                    updateDoc(patientRef, {
+                        testResults:
+                        {
+                            labData: labData.labData,
+                            url: downloadURL
+                        }
+
+
+                    })
+                });
+            }
+        );
+    };
 
 
 
-    const [labForm, setLabForm] = useState<any>({})
-    const [labData, setLabData] = useState<any>([])
-    const updateLabForm = (field: string, value: any) => {
-        setLabForm((preValue: any) => ({ ...preValue, [field]: value }))
-    }
-    let data: any[] = []
-
-    const addLabData = () => {
-        data.push(labForm)
-        setLabData([...labData, ...data])
-        console.log(labData)
-
-    }
 
 
 
 
 
-    const handleSubmit = () => {
 
 
-        setPastHistory('')
-    }
+
+
 
 
 
@@ -147,29 +192,44 @@ const Index = () => {
                     <div>
 
                     </div>
-                    <div>
-                        <form onSubmit={(e) => { e.preventDefault(); handleSubmit() }}>
+                    <div className="my-2 ml-8">
+                        <span className="border-b-2 border-gray-400  font-semibold">
+                            Test Results:{" "}
+                        </span>
+                        <table className="table w-3/4 p-5 mt-3">
 
-                            <div className='flex  lg:flex-row items-center'>
-                                <div className="form-control  w-full max-w-xs px-3">
-                                    <span className="label-text">Test</span>
-                                    <div className='flex lg:flex-row  justify-center items-center '>
-                                        <input value={labForm.name} onChange={(e) => updateLabForm('name', e.target.value)} type="text" placeholder='Name' className="input input-bordered  mt-1.5 border-info w-full max-w-xs" />
+                            <thead>
+                                <tr>
+                                    <th className='text-bold text-center'>Test Name</th>
+                                    <th className='text-bold text-center'>Value</th>
+                                    <th className='text-bold text-center'>Normal Value</th>
+                                </tr>
+                            </thead>
+                            <tbody className='text-center'>
+                                {labData.labData.map((obs) => (
+                                    <tr key={obs.testName}>
 
-                                    </div>
-                                </div>
 
-                                <div className="form-control  w-full max-w-xs px-3">
-                                    <span className="label-text">Value</span>
-                                    <div className='flex lg:flex-row  justify-center items-center '>
-                                        <input value={labForm.value} onChange={(e) => updateLabForm('value', e.target.value)} type="text" placeholder='Value' className="input input-bordered  mt-1.5 border-info w-full max-w-xs" />
+                                        <td className='hover:bg-slate-200'> {obs.testName}</td>
+                                        <td className='hover:bg-slate-200'>  {obs.value}{" "}</td>
+                                        <td className='hover:bg-slate-200'>  {obs.normalValue}{" "}</td>
 
-                                    </div>
-                                </div>
-                                <button onClick={addLabData} type='submit' className='btn btn-success text-white mt-7'>ADD</button>
-                            </div>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+
+                        <LabData addToLab={addToLab}></LabData>
+                    </div>
+                    <div className="mt-7 ml-8">
+                        <form onSubmit={formHandler} >
+                            <input className='bg-slate-200 border rounded-lg w-50 p-2' type="file" accept="image/* , .pdf" />
+                            <button type="submit" className='btn btn-primary text-white ml-2.5'>Upload File</button>
+
+
                         </form>
                     </div>
+
 
 
                 </div>
