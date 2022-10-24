@@ -36,7 +36,7 @@ const HomePage = () => {
           data?.userRole == "patient" &&
           !router.pathname.startsWith("patient")
         ) {
-          router.push("/patient");
+          router.push("/patient/" + data.uid);
         }
       });
     };
