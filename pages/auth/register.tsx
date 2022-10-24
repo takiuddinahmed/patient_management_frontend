@@ -15,35 +15,22 @@ import SelectField from "../../components/form/select.component";
 import Main from "../../components/layouts/main.component";
 import Navbar from "../../components/layouts/navbar.component";
 import { role } from "../../interface/user.interface";
-import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { auth, db } from "../../components/firebase";
 import { addDoc, collection } from "firebase/firestore";
-
-
-
-
-
 
 const roles = ["patient", "doctor", "lab", "pharmacy"];
 
 const Register = () => {
-  const [
-    createUserWithEmailAndPassword,
-    user,
-    loading,
-    createUserError,
-  ] = useCreateUserWithEmailAndPassword(auth);
-
+  const [createUserWithEmailAndPassword, user, loading, createUserError] =
+    useCreateUserWithEmailAndPassword(auth);
 
   const router = useRouter();
   const [loginFormData, setLoginFormData] =
     useState<IRegisterForm>(initialLoginFormData);
-  let userData = {}
-
-
+  let userData = {};
 
   const [error, setError] = useState<IRegisterForm>(initialLoginFormData);
-
 
   const updateLoginForm = (field: string, inputValue: string) => {
     setLoginFormData((value) => {
@@ -54,9 +41,7 @@ const Register = () => {
     setError((value) => {
       return { ...value, [field]: inputValue };
     });
-
   };
-
 
   useEffect(() => {
     if (loginFormData.email.length < 3) {
@@ -76,24 +61,20 @@ const Register = () => {
     }
   }, [loginFormData]);
 
-
-
   const handleSubmit = async () => {
     console.log(loginFormData);
     console.log(error);
     try {
       const email = loginFormData.email;
       const password = loginFormData.password;
-      await createUserWithEmailAndPassword(email, password)
+      await createUserWithEmailAndPassword(email, password);
     } catch (err) {
       alert("Register Failed. Try again");
     }
   };
 
-
   if (user) {
-    userData =
-    {
+    userData = {
       firstName: loginFormData.firstName,
       lastName: loginFormData.lastName,
       age: loginFormData.age,
@@ -102,25 +83,17 @@ const Register = () => {
       userRole: loginFormData.userRole,
       cardId: loginFormData.cardId,
       doctorType: loginFormData.doctorType,
-      uid: user.user.uid
-
-
-    }
-
+      uid: user.user.uid,
+    };
   }
 
   useEffect(() => {
     if (user) {
-      const colRef = collection(db, "users")
-      addDoc(colRef, userData)
+      const colRef = collection(db, "users");
+      addDoc(colRef, userData);
+      router.push("/");
     }
-  }, [user])
-
-
-
-
-
-
+  }, [user]);
 
   return (
     <>
@@ -151,7 +124,6 @@ const Register = () => {
             name="email"
             value={loginFormData.email}
             required
-
             onChange={(e) => updateLoginForm("email", e.target.value)}
           />
           <InputField

@@ -1,10 +1,18 @@
-import { getDocs, onSnapshot, setDoc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  onSnapshot,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
 import { useRouter } from "next/router";
 import { loadavg } from "os";
 import { useEffect, useState } from "react";
 import { fetchApi } from "../../api_calls/axios";
+import { getUser } from "../../api_calls/user/getUser.api";
 import Button from "../basic/button.component";
-import { iotCollection, iotDoc } from "../firebase";
+import { db, iotCollection, iotDoc } from "../firebase";
 
 const CardShow = () => {
   const [cardId, setCardId] = useState<string | null>(null);
@@ -26,7 +34,20 @@ const CardShow = () => {
   };
 
   const gotoPrescription = () => {
-    router.push("/doctor/" + cardId);
+    const colRefDoc = collection(db, "users");
+
+    const getUser = async () => {
+      const users = await getDocs(
+        query(colRefDoc, where("cardId", "==", cardId))
+      );
+      users.forEach((user) => {
+        const data = user.data();
+        const uid = data.uid;
+        clearData();
+        router.push("/doctor/" + uid);
+      });
+    };
+    getUser();
   };
 
   useEffect(() => {
@@ -48,18 +69,17 @@ const CardShow = () => {
             <div>
               <h1 className="text-center text-2xl">RFID Card Found</h1>
               <h2 className="text-xl mt-4 text-center">Card ID : {cardId}</h2>
-              <h2 className="text-xl text-center">{msg}</h2>
             </div>
             <div className="flex gap-3 mt-3">
-              <Button onClick={() => gotoPrescription()}>
-                Go to Prescripiton
-              </Button>
               <Button
                 onClick={() => {
                   clearData();
                 }}
               >
                 Reload
+              </Button>
+              <Button onClick={() => gotoPrescription()}>
+                Go to Prescripiton
               </Button>
             </div>
           </div>

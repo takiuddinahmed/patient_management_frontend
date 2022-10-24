@@ -14,18 +14,9 @@ import Form from "../../components/form/form.component";
 import InputField from "../../components/form/inputField.component";
 import Navbar from "../../components/layouts/navbar.component";
 
-
-
-
-
 const Login = () => {
-
-  const [
-    signInWithEmailAndPassword,
-    user,
-    loading,
-    signInError,
-  ] = useSignInWithEmailAndPassword(auth);
+  const [signInWithEmailAndPassword, user, loading, signInError] =
+    useSignInWithEmailAndPassword(auth);
 
   const router = useRouter();
   const [loginFormData, setLoginFormData] =
@@ -58,11 +49,11 @@ const Login = () => {
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     // e.preventDefault();
-    console.log(loginFormData);
+    console.log({ loginFormData });
     try {
       const email = loginFormData.email;
       const password = loginFormData.password;
-      signInWithEmailAndPassword(email, password)
+      signInWithEmailAndPassword(email, password);
 
       // if (user) {
       //   router.push("/");
@@ -74,11 +65,17 @@ const Login = () => {
     }
   };
 
+  useEffect(() => {
+    if (user) {
+      router.push("/");
+    }
+  }, [user]);
+
   // console.log(user, 'this is from login page')
 
   return (
     <>
-      <Navbar login={true} user={''}></Navbar>
+      <Navbar login={true} user={""}></Navbar>
       <div className="m-6 h-full flex justify-center items-center">
         <Form onSubmit={handleSubmit}>
           <InputField
