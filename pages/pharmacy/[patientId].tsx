@@ -10,8 +10,7 @@ import { IUser, users } from '../../interface/user.interface';
 
 
 const Index = () => {
-    // const [prescriptionForm, setPrescriptionForm] = useState<IPrescriptionForm>(
-    //     initialPrescriptionForm);
+
 
     const [presData, setPresData] = useState<any>([])
     const [pastHistory, setPastHistory] = useState<any>([])
@@ -63,18 +62,29 @@ const Index = () => {
 
 
 
-
     for (let i = 0; i <= presData.length; i++) {
 
+        let date = presData[i]?.createdAt?.toDate().getDate();
+        let month = presData[i]?.createdAt?.toDate().getMonth() + 1;
+        let year = presData[i]?.createdAt?.toDate().getFullYear()
+
+
         if (presData[i]?.patientID == router.query.patientId) {
-            datePresData.push(presData[i]?.createdAt.toDate().toString())
+            datePresData.push({
+                ...presData[i], label: ` ${presData[i]?.doctorFirstName} ${presData[i]?.doctorLastName} - ${date}/${month}/${year}`
+            });
+
 
         }
-        if (presData[i]?.createdAt.toDate().toString() == pastHistory && presData[i]?.patientID == router.query.patientId) {
-            patientPresData.push(presData[i])
+        if (
+            presData[i]?.createdAt == pastHistory.createdAt &&
+            presData[i]?.patientID == router.query.patientId
+        ) {
+            patientPresData.push(presData[i]);
         }
-
     }
+
+
 
     let recentPresData = []
     recentPresData = patientPresData[0]
@@ -98,8 +108,8 @@ const Index = () => {
 
                     <div className='text-2xl px-5 py-3'><span className='mx-3'>Name: {patient?.firstName} {patient?.lastName}</span>  <span className='mx-3'>Age:{patient?.age}</span></div>
                     <div className="ml-5 p-3">
-                        <div className="mt-2  text-2xl text-cyan-700">
-                            <span>Dr :</span> {recentPresData?.doctorFirstName} {recentPresData?.doctorLastName}
+                        <div className="mt-2 h-7 text-2xl text-cyan-700">
+                            {recentPresData?.doctorFirstName} {recentPresData?.doctorLastName}
                         </div>
                         <div className="my-2 ">
                             <span className="border-b-2 border-gray-400  my-2 font-semibold">

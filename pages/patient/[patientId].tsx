@@ -65,7 +65,7 @@ const Index = () => {
       <div className="grid grid-cols-3 gap-4">
         <div className="ml-5">
           <div className="mt-2  text-2xl text-cyan-700">
-            <span>Dr :</span>
+
             {recentPresData?.doctorFirstName} {recentPresData?.doctorLastName}
           </div>
 

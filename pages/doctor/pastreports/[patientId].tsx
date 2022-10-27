@@ -69,11 +69,11 @@ const Index = () => {
 
         if (presData[i]?.patientID == router.query.patientId) {
             datePresData.push({
-                ...presData[i], label: `${date}/${month}/${year} - ${presData[i]?.doctorFirstName} ${presData[i]?.doctorLastName}`
+                ...presData[i], label: `${presData[i]?.doctorFirstName} ${presData[i]?.doctorLastName} - ${date}/${month}/${year}`
             });
 
         }
-        if (presData[i]?.createdAt.toDate().toString() == pastHistory.createdAt && presData[i]?.patientID == router.query.patientId) {
+        if (presData[i]?.createdAt == pastHistory.createdAt && presData[i]?.patientID == router.query.patientId) {
             patientPresData.push(presData[i])
         }
 
@@ -94,6 +94,8 @@ const Index = () => {
     }
 
 
+
+
     return (
         <>
             <Navbar login={true} user={''}></Navbar>
@@ -101,7 +103,7 @@ const Index = () => {
 
                 <div className="ml-5 p-3">
                     <div className="mt-2  text-2xl text-cyan-700">
-                        <span>Dr :</span>{recentPresData?.doctorFirstName} {recentPresData?.doctorLastName}
+                        {pastHistory?.doctorFirstName} {pastHistory?.doctorLastName}
                     </div>
 
                     <div className="my-2 ">
@@ -117,6 +119,7 @@ const Index = () => {
                                     disablePortal
                                     id="combo-box-demo"
                                     options={datePresData}
+                                    getOptionLabel={(option) => option.label}
                                     sx={{ width: 300 }}
                                     renderInput={(params) => <TextField  {...params} label=""
 
@@ -130,151 +133,196 @@ const Index = () => {
                     </div>
                 </div>
 
-                <div className="mr-5 col-span-2 border-l-2 border-cyan-600 h-fit">
-                    <div className='ml-2'>
-                        <div className="flex  justify-around text-lg py-2 border-b-2 border-cyan-600">
-                            <span>Name: {patient?.firstName} {patient?.lastName} </span>
-                            <span>Age:{patient?.age} </span>
-                            <span>Sex:{patient?.sex} </span>
-                        </div>
-                        <div className='grid grid-cols-3 p-3'>
-                            <div>
-                                <span className="border-b-2 border-gray-400  font-semibold">
-                                    {" "}
-                                    RX :{" "}
-                                </span>
-                                <ol className="list-decimal m-3">
-                                    {recentPresData?.medicine?.map((pres: any) => (
-                                        <li key={pres.name}>
-                                            <span className="p-2 text-lg">{pres.name} </span> <br />
-                                            <span className="p-2"> {pres.dose} </span>
-                                            <span className="p-2">{pres.doseTime}</span>
-                                            <span className="p-2">
-                                                {pres.time} {pres.timeType}{" "}
+                <div className='col-span-2'>
+                    <div className="mr-5  border-l-2 border-cyan-600 h-fit">
+                        <div className='ml-2'>
+                            <div className="flex  justify-around text-lg py-2 border-b-2 border-cyan-600">
+                                <span>Name: {patient?.firstName} {patient?.lastName} </span>
+                                <span>Age:{patient?.age} </span>
+                                <span>Sex:{patient?.sex} </span>
+                            </div>
+                            {pastHistory?.doctorFirstName &&
+
+                                <div className='grid grid-cols-2 p-3'>
+                                    <div className='grid grid-cols-2'>
+                                        <div>
+                                            <span className="border-b-2 border-gray-400  font-semibold">
+                                                {" "}
+                                                RX :{" "}
                                             </span>
-                                        </li>
-                                    ))}
-                                </ol>
-                            </div>
-                            <div className="my-2">
-                                <span className="border-b-2 border-gray-400 font-semibold">
-                                    {" "}
-                                    Chief Complaints :{" "}
-                                </span>
-                                <ul className="list-disc m-3">
-                                    {recentPresData?.complaints?.map((complain: any) => (
-                                        <li key={complain}>
-                                            {complain}
-                                        </li>
-                                    ))}
-
-                                </ul>
-
-                            </div>
-                            <div className="my-2">
-                                <span className="border-b-2 border-gray-400  font-semibold">
-                                    On Examination:{" "}
-                                </span>
-                                <ul className="list-disc m-3">
-                                    {recentPresData?.observation?.map((obs: any) => (
-                                        <li key={obs.name}>
-                                            <span className="p-2 text-lg">
-                                                {obs.name}: {obs.value}{" "}
+                                            <ol className="list-decimal m-3">
+                                                {pastHistory?.medicine?.map((pres: any) => (
+                                                    <li key={pres.name}>
+                                                        <span className="p-2 text-lg">{pres.name} </span> <br />
+                                                        <span className="p-2"> {pres.dose} </span>
+                                                        <span className="p-2">{pres.doseTime}</span>
+                                                        <span className="p-2">
+                                                            {pres.time} {pres.timeType}{" "}
+                                                        </span>
+                                                    </li>
+                                                ))}
+                                            </ol>
+                                        </div>
+                                        <div className="my-2">
+                                            <span className="border-b-2 border-gray-400 font-semibold">
+                                                {" "}
+                                                Chief Complaints :{" "}
                                             </span>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                            <div className="my-2">
-                                <span className="border-b-2 border-gray-400  font-semibold">
-                                    {" "}
-                                    Investigation :{" "}
-                                </span>
-                                <ul className="list-disc m-3">
-                                    {recentPresData?.investigation?.map((inv: any) => (
+                                            <ul className="list-disc m-3">
+                                                {pastHistory?.complaints?.map((complain: any) => (
+                                                    <li key={complain}>
+                                                        {complain}
+                                                    </li>
+                                                ))}
 
-                                        <li key={inv}>{inv}</li>
-                                    ))}
-                                </ul>
+                                            </ul>
 
-                            </div>
-                            <div className="my-2">
-                                <span className="border-b-2 border-gray-400  font-semibold">
-                                    {" "}
-                                    Differential Diagnosis :{" "}
-                                </span>
-                                <ul className="list-disc m-3">
-                                    {recentPresData?.differential?.map((dif: any) => (
-                                        <li key={dif}>
-                                            <span className="p-2 text-lg">{dif} </span>
-                                        </li>
-                                    ))}
-                                </ul>
+                                        </div>
+                                        <div className="my-2">
+                                            <span className="border-b-2 border-gray-400  font-semibold">
+                                                On Examination:{" "}
+                                            </span>
+                                            <ul className="list-disc m-3">
+                                                {pastHistory?.observation?.map((obs: any) => (
+                                                    <li key={obs.name}>
+                                                        <span className="p-2 text-lg">
+                                                            {obs.name}: {obs.value}{" "}
+                                                        </span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                        <div className="my-2">
+                                            <span className="border-b-2 border-gray-400  font-semibold">
+                                                {" "}
+                                                Investigation :{" "}
+                                            </span>
+                                            <ul className="list-disc m-3">
+                                                {pastHistory?.investigation?.map((inv: any) => (
 
-                            </div>
-                            <div className="my-2">
-                                <span className="border-b-2 border-gray-400  font-semibold">
-                                    {" "}
-                                    Diagnosis :{" "}
-                                </span>
-                                <ul className="list-disc m-3">
-                                    {recentPresData?.diagnosis?.map((dia: any) => (
+                                                    <li key={inv}>{inv}</li>
+                                                ))}
+                                            </ul>
 
-                                        <li key={dia}>{dia}</li>
-                                    ))}
-                                </ul>
+                                        </div>
+                                        <div className="my-2">
+                                            <span className="border-b-2 border-gray-400  font-semibold">
+                                                {" "}
+                                                Differential Diagnosis :{" "}
+                                            </span>
+                                            <ul className="list-disc m-3">
+                                                {pastHistory?.differential?.map((dif: any) => (
+                                                    <li key={dif}>
+                                                        <span className="p-2 text-lg">{dif} </span>
+                                                    </li>
+                                                ))}
+                                            </ul>
 
-                            </div>
-                            <div className="mt-10">
-                                <span className="border-b-2 border-gray-400  font-semibold">
-                                    {" "}
-                                    Advices :{" "}
-                                </span>
-                                <ul className="list-disc m-3">
+                                        </div>
+                                        <div className="my-2">
+                                            <span className="border-b-2 border-gray-400  font-semibold">
+                                                {" "}
+                                                Diagnosis :{" "}
+                                            </span>
+                                            <ul className="list-disc m-3">
+                                                {pastHistory?.diagnosis?.map((dia: any) => (
 
-                                    {recentPresData?.advices?.map((adv: any) => (
+                                                    <li key={dia}>{dia}</li>
+                                                ))}
+                                            </ul>
 
-                                        <li key={adv}>{adv}</li>
-                                    ))}
-                                </ul>
+                                        </div>
+                                        <div className="mt-10">
+                                            <span className="border-b-2 border-gray-400  font-semibold">
+                                                {" "}
+                                                Advices :{" "}
+                                            </span>
+                                            <ul className="list-disc m-3">
 
-                            </div>
+                                                {pastHistory?.advices?.map((adv: any) => (
 
-                            <div className="mt-10">
-                                <span className="border-b-2 border-gray-400  font-semibold">
-                                    Test Results:{" "}
-                                </span>
-                                <table className="table  p-5 mt-3">
+                                                    <li key={adv}>{adv}</li>
+                                                ))}
+                                            </ul>
 
-                                    <thead>
-                                        <tr>
-                                            <th className='text-bold text-center'>Test Name</th>
-                                            <th className='text-bold text-center'>Value</th>
-                                            <th className='text-bold text-center'>Normal Value</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className='text-center'>
-                                        {recentPresData?.testResults?.labData.map((obs: any) => (
-                                            <tr key={obs.testName}>
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-10 col-start-1 col-end-7">
+                                        <span className="border-b-2 border-gray-400  font-semibold">
+                                            Test Results:{" "}
+                                        </span>
 
 
-                                                <td className='hover:bg-slate-200'> {obs.testName}</td>
-                                                <td className='hover:bg-slate-200'>  {obs.value}{" "}</td>
-                                                <td className='hover:bg-slate-200'>  {obs.normalValue}{" "}</td>
+                                        <div>
+                                            {pastHistory?.testResults?.labData?.map((val: any) => (
+                                                <>
+                                                    <div className="mt-5">
 
-                                            </tr>
+                                                        <br />
+
+
+
+                                                        {val.values.length !== 0 &&
+
+                                                            <>
+                                                                <span className='mx-7 text-lg text-semibold'>
+                                                                    Test  Name:  {val.testName}
+                                                                </span>
+                                                                <table key={val.testName} className="table w-full mt-4">
+                                                                    <thead className="text-center text-lg">
+
+                                                                        <tr>
+                                                                            <th className="text-center text-lg">Property</th>
+                                                                            <th className="text-center text-lg">Value</th>
+                                                                            <th className="text-center text-lg">Normal Value</th>
+                                                                        </tr>
+                                                                    </thead>
+
+                                                                    <tbody>
+                                                                        {
+                                                                            val.values.map((prop: any) => (
+                                                                                <tr className=" hover:bg-slate-200 text-center" key={val.testName}>
+                                                                                    <td className=" hover:bg-slate-200">{prop.property} </td>
+                                                                                    <td className=" hover:bg-slate-200">{prop.value}</td>
+                                                                                    <td className=" hover:bg-slate-200">{prop.normalValue}</td>
+
+                                                                                </tr>
+                                                                            ))
+                                                                        }
+                                                                    </tbody>
+                                                                </table> </>}
+
+                                                    </div>
+
+                                                </>
+                                            ))
+                                            }
+                                        </div>
+                                        {pastHistory?.testResults?.labData?.map((val: any) => (
+                                            <>
+
+                                                {
+                                                    val.url !== "" &&
+                                                    <>
+                                                        <span className='mx-7 text-lg text-semibold'>
+                                                            Test  Name:  {val.testName}
+                                                        </span>
+                                                        <img src={val.url} alt="" />
+                                                    </>
+
+                                                }
+                                            </>
+
                                         ))}
-                                    </tbody>
-                                </table>
+                                    </div>
 
-                            </div>
+                                </div>
+                            }
 
                         </div>
 
-                    </div>
 
-                    <div className='m-20'>
-                        <img style={{ height: " 500px", width: "auto" }} src={recentPresData?.testResults?.url} />
                     </div>
                 </div>
 
