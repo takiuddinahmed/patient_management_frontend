@@ -1,25 +1,28 @@
+import { async } from '@firebase/util';
+import { doc, updateDoc } from 'firebase/firestore';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import React, { FC, useState } from 'react';
 import { render } from 'react-dom';
 import { fileURLToPath } from 'url';
-import { ILabDataForm, initialLabDataForm, initialValues, IValues } from '../../api_calls/lab/lab.api';
+import { ILabDataForm, initialLabDataForm, IValues } from '../../api_calls/lab/lab.api';
+import { db, storage } from '../firebase';
 import LabFormValues from './property.component';
 interface IProp {
     addToLab: Function;
+    dataId: string;
 }
 
-const LabData: FC<IProp> = ({ addToLab }) => {
+const LabData: FC<IProp> = ({ addToLab, dataId }) => {
     const [formType, setFormType] = useState('')
     const [selectType, setSelectType] = useState('')
     const [labDataForm, setLabDataForm] = useState<ILabDataForm>(initialLabDataForm)
     const [name, setName] = useState<string>('')
+    const [fileName, setFileName] = useState<string>("")
+    const [url, setUrl] = useState<string>("")
+    const [uploadText, setUploadText] = useState<string>("")
+    const [buttonProperty, setButtonProperty] = useState("btn-success")
+    let text = ""
 
-
-    const addToLabForm = (value: IValues) => {
-        setLabDataForm((prev) => ({
-            ...prev,
-            values: [...prev.values, value],
-        }));
-    }
 
 
     const updateLabDataForm = (field: string, value: any) => {
@@ -39,23 +42,78 @@ const LabData: FC<IProp> = ({ addToLab }) => {
         }
     }
 
-    const handleSubmit = () => {
+        ;
+    // file uploading and getting img url
 
-        if (labDataForm.testName !== '' && labDataForm.values.length !== 0) {
+    const handleSubmit = (e: any) => {
+        e.preventDefault();
+        const file = e.target[0].files[0];
+        setFileName(file.name)
+        const storageRef = ref(storage, `files/${dataId}-${file.name}`)
+        uploadBytes(storageRef, file).then(() => {
+            getDownloadURL(ref(storage, `${storageRef}`)).then((url) => {
+
+
+                setLabDataForm((prev) => ({
+                    ...prev,
+                    url: url,
+                    fileName: file.name
+                }));
+
+                setUrl('')
+                setFileName('')
+
+            })
+            alert("File Uploaded")
+            setButtonProperty("btn-disabled")
+            setUploadText("File Uploaded")
+
+        });
+
+
+
+    };
+
+
+    const formHandler = () => {
+
+        if (labDataForm.testName !== '') {
             addToLab(labDataForm);
-            setLabDataForm(initialLabDataForm)
-            setFormType("")
-            setName("")
+            setLabDataForm(initialLabDataForm);
+            setFormType("");
+            setName("");
+            setUploadText('')
+            setButtonProperty("btn-success")
+
         }
         else {
-            alert('Please Enter Data')
-            setLabDataForm(initialLabDataForm)
-            setFormType("")
-            setName("")
+            alert('Please Enter Data');
+            setLabDataForm(initialLabDataForm);
+            setFormType("");
+            setName("");
+            setFileName("")
+            setUploadText('')
+            setButtonProperty("btn-success")
         }
 
 
     }
+
+
+
+    if (fileName !== "") {
+        text = `File: `
+    }
+
+    const addToLabForm = (value: IValues) => {
+        setLabDataForm((prev) => ({
+            ...prev,
+            values: [...prev.values, value],
+
+        }));
+        setUrl("")
+    }
+
 
 
     return (
@@ -64,8 +122,11 @@ const LabData: FC<IProp> = ({ addToLab }) => {
             {name !== "" ?
                 (<>
                     <span className='mx-7 text-lg text-semibold'>
-                        Test  Name:  {name}
+                        Test  Name:  {name}     {text}{fileName}
                     </span>
+                    <div className='mx-7  text-semibold'>
+                        <span className='text-bold text-2xl text-success p-2 m-7'>{uploadText}</span>
+                    </div>
                     <table className="table mx-7 mt-4">
                         {
                             formType == "Input Value" ? (<thead className="text-center text-lg">
@@ -135,16 +196,6 @@ const LabData: FC<IProp> = ({ addToLab }) => {
             }
 
 
-
-
-
-
-
-
-
-
-
-
             <div className='w-full ml-10'>
                 {formType == "Input Value" ? (
 
@@ -160,24 +211,26 @@ const LabData: FC<IProp> = ({ addToLab }) => {
                 {
                     formType == "File" ? (
                         <div className="mt-4 ml-8">
-                            <form onSubmit={(e) => { e.preventDefault(); handleSubmit() }}>
+                            <form onSubmit={handleSubmit}>
                                 <input
                                     style={{ height: '40px' }}
                                     className="bg-slate-200 border rounded-lg w-50 px-2 py-1"
                                     type="file"
-                                    accept="image/* , .pdf"
+                                    accept="image/*"
                                 />
                                 <button
+
+                                    type='submit'
                                     style={{ height: '40px' }}
-                                    className='bg-cyan-500 px-4 text-white ml-3 mt-2 rounded'>
-                                    ADD
+                                    className={`${buttonProperty} btn px-4 text-white ml-3 mt-2 rounded`}>
+                                    Upload
                                 </button>
                             </form>
                         </div>) : (<></>)
                 }
             </div>
             {
-                name !== '' ? (<button onClick={handleSubmit} className='btn mx-7 mt-7'>Add To Report</button>) : (<></>)
+                name !== '' ? (<button onClick={formHandler} className='btn mx-7 mt-7'>Add To Report</button>) : (<></>)
             }
 
         </div >

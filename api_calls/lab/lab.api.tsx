@@ -8,13 +8,16 @@ export interface IValues {
 export const initialValues: IValues = {
     property: "",
     value: "",
-    normalValue: ""
+    normalValue: "",
+
 
 }
 
 export interface ILabDataForm {
     testName: string;
     values: IValues[];
+    url: string
+    fileName: string
 }
 
 export interface ILabData {
@@ -26,6 +29,8 @@ export interface ILabData {
 export const initialLabDataForm: ILabDataForm = {
     testName: "",
     values: [],
+    url: "",
+    fileName: ""
 }
 export const initialLabData: ILabData = {
     labData: []

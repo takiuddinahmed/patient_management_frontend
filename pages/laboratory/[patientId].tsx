@@ -1,4 +1,5 @@
 import { Autocomplete, TextField } from "@mui/material";
+import { spawn } from "child_process";
 import {
   collection,
   doc,
@@ -63,11 +64,21 @@ const Index = () => {
   let patientPresData: any[] = [];
 
   for (let i = 0; i <= presData.length; i++) {
+
+    let date = presData[i]?.createdAt?.toDate().getDate();
+    let month = presData[i]?.createdAt?.toDate().getMonth() + 1;
+    let year = presData[i]?.createdAt?.toDate().getFullYear()
+
+
     if (presData[i]?.patientID == router.query.patientId) {
-      datePresData.push(presData[i]?.createdAt.toDate().toString());
+      datePresData.push({
+        ...presData[i], label: ` ${presData[i]?.doctorFirstName} ${presData[i]?.doctorLastName} - ${date}/${month}/${year}`
+      });
+
+
     }
     if (
-      presData[i]?.createdAt.toDate().toString() == pastHistory &&
+      presData[i]?.createdAt == pastHistory.createdAt &&
       presData[i]?.patientID == router.query.patientId
     ) {
       patientPresData.push(presData[i]);
@@ -76,7 +87,7 @@ const Index = () => {
 
   let recentPresData: any = [];
   recentPresData = patientPresData[0];
-  // console.log(recentPresData);
+
 
 
   const addToLab = (data: ILabDataForm) => {
@@ -86,17 +97,7 @@ const Index = () => {
     }));
   }
 
-  // // file uploading and getting img url
-  // const formHandler = (e: any) => {
-  //   e.preventDefault();
-  //   const file = e.target[0].files[0];
 
-  //   if (recentPresData == undefined) {
-  //     alert("please select a prescription");
-  //   } else {
-  //     uploadFiles(file);
-  //   }
-  // };
 
   const patientRef = doc(db, "prescription", `${recentPresData?.id}`);
   const updateReport = () => {
@@ -109,35 +110,11 @@ const Index = () => {
     alert("Report Submitted")
     setLabData(initialLabData)
   }
-  // const uploadFiles = (file: any) => {
-  //   if (!file) {
-  //    
-  //   }
 
-  const sotrageRef = ref(storage, `files`);
-  // const uploadTask = uploadBytesResumable(sotrageRef, file);
-  // const uploadTask2 = await uploadBytes(sotrageRef, file) 
 
-  //   uploadTask.on(
-  //     "state_changed",
 
-  //     () => {
-  //       getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-  //         // console.log("File available at", downloadURL);
-  //         // updating data
-  //         updateDoc(patientRef, {
-  //           testResults: {
-  //             labData: labData.labData,
-  //             url: downloadURL,
-  //           },
-  //         });
 
-  //         setLabData(initialLabData);
-  //       });
-  //     }
-  //   );
-  // };
-  console.log(labData)
+
 
   return (
     <>
@@ -173,6 +150,7 @@ const Index = () => {
                     disablePortal
                     id="combo-box-demo"
                     options={datePresData}
+                    getOptionLabel={(option) => option.label}
                     sx={{ width: 300 }}
                     renderInput={(params) => <TextField {...params} label="" />}
                   />
@@ -182,21 +160,26 @@ const Index = () => {
           </div>
 
           {
-            recentPresData !== undefined ? (
-              <>
+            recentPresData !== undefined &&
+            <>
 
-                <div className=" ml-5 p-3 ">
-                  <span className="border-b-2 border-gray-400  my-2 font-semibold text-xl">
-                    {" "}
-                    Test Results :{" "}
-                  </span>
-                  <div>
-                    {labData?.labData?.map((val) => (
-                      <>
-                        <div className="mt-5">
-                          <span className='mx-7 text-lg text-semibold'>
-                            Test  Name:  {val.testName}
-                          </span>
+              <div className=" ml-5 p-3 ">
+                <span className="border-b-2 border-gray-400  my-2 font-semibold text-xl">
+                  {" "}
+                  Test Results :{" "}
+                </span>
+                <div>
+                  {labData?.labData?.map((val) => (
+                    <>
+                      <div className="mt-5">
+                        <span className='mx-7 text-lg text-semibold'>
+                          Test  Name:  {val.testName}
+                        </span>
+                        <br />
+
+                        {val.url !== "" && <span className="text-bold  mx-7"> File Attached: {val.fileName}</span>}
+
+                        {val.values.length !== 0 &&
                           <table key={val.testName} className="table w-full mt-4">
                             <thead className="text-center text-lg">
 
@@ -219,41 +202,39 @@ const Index = () => {
                                 ))
                               }
                             </tbody>
-                          </table>
-                        </div>
-                      </>
-                    ))
-                    }
-                  </div>
+                          </table>}
 
+                      </div>
+                    </>
+                  ))
+                  }
                 </div>
 
-                <LabData addToLab={addToLab}></LabData>
+              </div>
+
+              <LabData addToLab={addToLab} dataId={recentPresData?.id}></LabData>
 
 
-              </>)
+            </>
 
-              :
 
-              (<></>)
           }
 
+          {/* */}
         </div>
-        <div className=" w-3/5 mx-auto mt-5 ">
-          <table className="table w-full p-5">
-            <thead>
-              <tr>
-                <th className="text-4xl text-center">Test Name</th>
-              </tr>
-            </thead>
-            <tbody>
-              {recentPresData?.investigation?.map((inv: string) => (
-                <tr className="text-3xl hover:bg-slate-200" key={inv}>
-                  {inv}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className=" w-3/5 ml-44 mt-5 ">
+          <span className="border-b-2 border-gray-400  text-3xl font-semibold">
+            {" "}
+            Investigation :{" "}
+          </span>
+          <ol className="list-decimal m-3">
+
+            {recentPresData?.investigation?.map((inv: string) => (
+              <li key={inv}>
+                <span className="p-2  text-lg">{inv} </span>
+              </li>))}
+
+          </ol>
           <div className="mt-44">
             {
               labData !== initialLabData ? (

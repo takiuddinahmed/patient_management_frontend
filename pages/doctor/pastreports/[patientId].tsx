@@ -63,12 +63,17 @@ const Index = () => {
 
 
     for (let i = 0; i <= presData.length; i++) {
+        let date = presData[i]?.createdAt?.toDate().getDate();
+        let month = presData[i]?.createdAt?.toDate().getMonth() + 1;
+        let year = presData[i]?.createdAt?.toDate().getFullYear()
 
         if (presData[i]?.patientID == router.query.patientId) {
-            datePresData.push(presData[i]?.createdAt.toDate().toString())
+            datePresData.push({
+                ...presData[i], label: `${date}/${month}/${year} - ${presData[i]?.doctorFirstName} ${presData[i]?.doctorLastName}`
+            });
 
         }
-        if (presData[i]?.createdAt.toDate().toString() == pastHistory && presData[i]?.patientID == router.query.patientId) {
+        if (presData[i]?.createdAt.toDate().toString() == pastHistory.createdAt && presData[i]?.patientID == router.query.patientId) {
             patientPresData.push(presData[i])
         }
 
