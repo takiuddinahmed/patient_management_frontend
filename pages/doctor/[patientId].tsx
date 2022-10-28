@@ -192,6 +192,17 @@ const Index = () => {
                 Past Reports
               </a>
             </Link>
+            <br />
+            <Link href={{
+              pathname: "/doctor/reportlists/[patientId]",
+              query: {
+                patientId: router.query.patientId
+              }
+            }}>
+              <a className="no-underline hover:underline">
+                Reports Lists
+              </a>
+            </Link>
           </div>
 
           <div className="my-2">

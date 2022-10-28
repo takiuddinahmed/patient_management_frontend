@@ -266,7 +266,7 @@ const Index = () => {
                                                         {val.values.length !== 0 &&
 
                                                             <>
-                                                                <span className='mx-7 text-lg text-semibold'>
+                                                                <span className='mx-7 my-3 text-xl text-bold'>
                                                                     Test  Name:  {val.testName}
                                                                 </span>
                                                                 <table key={val.testName} className="table w-full mt-4">
@@ -304,12 +304,13 @@ const Index = () => {
 
                                                 {
                                                     val.url !== "" &&
-                                                    <>
-                                                        <span className='mx-7 text-lg text-semibold'>
+                                                    <div className='my-5 mx-44'>
+                                                        <span className='mx-7 my-3 text-xl text-bold'>
                                                             Test  Name:  {val.testName}
                                                         </span>
-                                                        <img src={val.url} alt="" />
-                                                    </>
+                                                        <img style={{ height: '700px', width: '500px' }} src={val.url} alt="" />
+
+                                                    </div>
 
                                                 }
                                             </>

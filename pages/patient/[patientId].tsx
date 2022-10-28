@@ -94,6 +94,16 @@ const Index = () => {
               }}
             >
               <a className="no-underline hover:underline">Past Reports</a>
+            </Link> <br />
+            <Link href={{
+              pathname: "/patient/reportlists/[patientId]",
+              query: {
+                patientId: router.query.patientId
+              }
+            }}>
+              <a className="no-underline hover:underline">
+                Reports Lists
+              </a>
             </Link>
           </div>
           <div className="my-2">
@@ -147,7 +157,7 @@ const Index = () => {
           </div>
         </div>
 
-        <div className="mr-5 col-span-2 border-l-2 border-cyan-600 h-screen">
+        <div className="mr-5 col-span-2 border-l-2 border-cyan-600 h-fit">
           <div className="flex  justify-around text-lg py-2 border-b-2 border-cyan-600">
             <span>
               Name: {patient?.firstName} {patient?.lastName}{" "}
@@ -188,6 +198,76 @@ const Index = () => {
               ))}
             </ul>
           </div>
+          {recentPresData?.testResults?.labData &&
+            <div className="mt-10 mx-3 col-start-1 col-end-7">
+              <span className="border-b-2 border-gray-400  font-semibold">
+                Test Results:{" "}
+              </span>
+
+
+              <div>
+                {recentPresData?.testResults?.labData?.map((val: any) => (
+                  <>
+                    <div className="mt-3">
+
+
+                      {val.values.length !== 0 &&
+
+                        <>
+                          <span className='mx-7 my-3 text-xl text-bold'>
+                            Test  Name:  {val.testName}
+                          </span>
+                          <table key={val.testName} className="table w-full mt-4">
+                            <thead className="text-center text-lg">
+
+                              <tr>
+                                <th className="text-center text-lg">Property</th>
+                                <th className="text-center text-lg">Value</th>
+                                <th className="text-center text-lg">Normal Value</th>
+                              </tr>
+                            </thead>
+
+                            <tbody>
+                              {
+                                val.values.map((prop: any) => (
+                                  <tr className=" hover:bg-slate-200 text-center" key={val.testName}>
+                                    <td className=" hover:bg-slate-200">{prop.property} </td>
+                                    <td className=" hover:bg-slate-200">{prop.value}</td>
+                                    <td className=" hover:bg-slate-200">{prop.normalValue}</td>
+
+                                  </tr>
+                                ))
+                              }
+                            </tbody>
+                          </table> </>}
+
+                    </div>
+
+                  </>
+                ))
+                }
+              </div>
+              {recentPresData?.testResults?.labData?.map((val: any) => (
+                <>
+
+                  {
+                    val.url !== "" &&
+                    <div className='my-5 mx-44'>
+                      <span className='mx-7 my-3 text-xl text-bold'>
+                        Test  Name:  {val.testName}
+                      </span>
+                      <img style={{ height: '700px', width: '500px' }} src={val.url} alt="" />
+
+                    </div>
+
+                  }
+                </>
+
+              ))}
+            </div>
+
+          }
+
         </div>
       </div>
     </>

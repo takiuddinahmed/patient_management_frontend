@@ -138,7 +138,7 @@ const Index = () => {
                     </div>
                 </div>
                 <div className="w-3/5 mx-auto mt-5 ">
-                    <table className="table w-full ">
+                    {recentPresData?.medicine && <table className="table w-full ">
 
                         <thead>
                             <tr>
@@ -167,7 +167,8 @@ const Index = () => {
 
 
                         </tbody>
-                    </table>
+                    </table>}
+
                 </div>
             </div>
         </div>

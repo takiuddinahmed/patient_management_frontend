@@ -220,27 +220,29 @@ const Index = () => {
 
           }
 
-          {/* */}
         </div>
-        <div className=" w-3/5 ml-44 mt-5 ">
-          <span className="border-b-2 border-gray-400  text-3xl font-semibold">
-            {" "}
-            Investigation :{" "}
-          </span>
-          <ol className="list-decimal m-3">
+        {recentPresData?.investigation &&
+          <div className=" w-3/5 ml-44 mt-5 ">
+            <span className="border-b-2 border-gray-400  text-3xl font-semibold">
+              {" "}
+              Investigation :{" "}
+            </span>
+            <ol className="list-decimal m-3">
 
-            {recentPresData?.investigation?.map((inv: string) => (
-              <li key={inv}>
-                <span className="p-2  text-lg">{inv} </span>
-              </li>))}
+              {recentPresData?.investigation?.map((inv: string) => (
+                <li key={inv}>
+                  <span className="p-2  text-lg">{inv} </span>
+                </li>))}
 
-          </ol>
-          <div className="mt-44">
-            {
-              labData !== initialLabData ? (
-                <button onClick={updateReport} className="btn btn-success  text-white">Submit Report</button>) : (<></>)}
+            </ol>
+            <div className="mt-44">
+              {
+                labData !== initialLabData ? (
+                  <button onClick={updateReport} className="btn btn-success  text-white">Submit Report</button>) : (<></>)}
+            </div>
           </div>
-        </div>
+        }
+
 
       </div>
     </>
