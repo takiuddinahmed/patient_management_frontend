@@ -14,7 +14,7 @@ import { getUser } from "../../api_calls/user/getUser.api";
 import Button from "../basic/button.component";
 import { db, iotCollection, iotDoc } from "../firebase";
 
-const CardShow = ({ role = "doctor" }) => {
+const CardShow = ({ role }: { role: string }) => {
   const [cardId, setCardId] = useState<string | null>(null);
   const [msg, setMsg] = useState("");
   const [load, setLoad] = useState(false);

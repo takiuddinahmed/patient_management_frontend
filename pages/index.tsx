@@ -1,15 +1,15 @@
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../components/firebase";
 import { getLocalHostData } from "../utils/getLocalData.util";
 
 const HomePage = () => {
   const router = useRouter();
-
+  const [user, loading, error] = useAuthState(auth);
   useEffect(() => {
     const checkUser = async () => {
-      const user = auth.currentUser;
       const userData = await getDocs(
         query(collection(db, "users"), where("uid", "==", user?.uid))
       );
@@ -40,13 +40,13 @@ const HomePage = () => {
         }
       });
     };
-    console.log(auth.currentUser);
-    if (auth.currentUser) {
+
+    if (user) {
       checkUser();
-    } else {
+    } else if (!loading) {
       router.push("/auth/login");
     }
-  }, []);
+  }, [user, loading]);
   return (
     <>
       <h1>Loading</h1>

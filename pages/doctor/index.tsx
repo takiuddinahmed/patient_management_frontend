@@ -56,7 +56,7 @@ const Home: NextPage = () => {
               </Button>
             </div>
           ) : (
-            <CardShow />
+            <CardShow role="doctor" />
           )}
 
           <div className="mt-5">
