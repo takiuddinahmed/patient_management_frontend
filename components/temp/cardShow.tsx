@@ -14,7 +14,7 @@ import { getUser } from "../../api_calls/user/getUser.api";
 import Button from "../basic/button.component";
 import { db, iotCollection, iotDoc } from "../firebase";
 
-const CardShow = () => {
+const CardShow = ({ role = "doctor" }) => {
   const [cardId, setCardId] = useState<string | null>(null);
   const [msg, setMsg] = useState("");
   const [load, setLoad] = useState(false);
@@ -44,7 +44,7 @@ const CardShow = () => {
         const data = user.data();
         const uid = data.uid;
         clearData();
-        router.push("/doctor/" + uid);
+        router.push(`/${role}/${uid}`);
       });
     };
     getUser();
