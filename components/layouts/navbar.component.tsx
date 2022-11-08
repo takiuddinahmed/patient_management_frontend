@@ -96,7 +96,7 @@ const Navbar = ({ login, user: userData }: NavbarProps) => {
             </svg>
             <Link href={"/"}>
               <a className="font-semibold text-xl tracking-tight">
-                Patient Management
+                EEE 4000
               </a>
             </Link>
           </div>
