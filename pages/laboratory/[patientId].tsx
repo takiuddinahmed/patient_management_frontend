@@ -7,8 +7,14 @@ import {
   orderBy,
   query,
   updateDoc,
+  where,
 } from "firebase/firestore";
-import { getDownloadURL, ref, uploadBytes, uploadBytesResumable } from "firebase/storage";
+import {
+  getDownloadURL,
+  ref,
+  uploadBytes,
+  uploadBytesResumable,
+} from "firebase/storage";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import {
@@ -35,12 +41,18 @@ const Index = () => {
   useEffect(() => {
     if (router.isReady) {
       const { patientId } = router.query;
-      const user = users.filter((u) => u.cardId == patientId);
-      if (user.length) {
-        setPatient(user[0]);
-      } else setPatient(users[0]);
+      const colRefDoc = collection(db, "users");
 
-      console.log(users[0]);
+      const getUser = async () => {
+        const users = await getDocs(
+          query(colRefDoc, where("uid", "==", patientId))
+        );
+        users.forEach((user) => {
+          const data = user.data();
+          setPatient(data);
+        });
+      };
+      getUser();
     }
   }, [router]);
 
@@ -64,18 +76,15 @@ const Index = () => {
   let patientPresData: any[] = [];
 
   for (let i = 0; i <= presData.length; i++) {
-
     let date = presData[i]?.createdAt?.toDate().getDate();
     let month = presData[i]?.createdAt?.toDate().getMonth() + 1;
-    let year = presData[i]?.createdAt?.toDate().getFullYear()
-
+    let year = presData[i]?.createdAt?.toDate().getFullYear();
 
     if (presData[i]?.patientID == router.query.patientId) {
       datePresData.push({
-        ...presData[i], label: ` ${presData[i]?.doctorFirstName} ${presData[i]?.doctorLastName} - ${date}/${month}/${year}`
+        ...presData[i],
+        label: ` ${presData[i]?.doctorFirstName} ${presData[i]?.doctorLastName} - ${date}/${month}/${year}`,
       });
-
-
     }
     if (
       presData[i]?.createdAt == pastHistory.createdAt &&
@@ -88,16 +97,12 @@ const Index = () => {
   let recentPresData: any = [];
   recentPresData = patientPresData[0];
 
-
-
   const addToLab = (data: ILabDataForm) => {
     setLabData((prev) => ({
       ...prev,
       labData: [...prev.labData, data],
     }));
-  }
-
-
+  };
 
   const patientRef = doc(db, "prescription", `${recentPresData?.id}`);
   const updateReport = () => {
@@ -107,14 +112,9 @@ const Index = () => {
       },
     });
 
-    alert("Report Submitted")
-    setLabData(initialLabData)
-  }
-
-
-
-
-
+    alert("Report Submitted");
+    setLabData(initialLabData);
+  };
 
   return (
     <>
@@ -130,8 +130,7 @@ const Index = () => {
           </div>
           <div className="ml-5 p-3">
             <div className="mt-2  text-2xl text-cyan-700">
-              {recentPresData?.doctorFirstName}{" "}
-              {recentPresData?.doctorLastName}
+              {recentPresData?.doctorFirstName} {recentPresData?.doctorLastName}
             </div>
             <div className="my-2 ">
               <span className="border-b-2 border-gray-400  my-2 font-semibold">
@@ -159,10 +158,8 @@ const Index = () => {
             </div>
           </div>
 
-          {
-            recentPresData !== undefined &&
+          {recentPresData !== undefined && (
             <>
-
               <div className=" ml-5 p-3 ">
                 <span className="border-b-2 border-gray-400  my-2 font-semibold text-xl">
                   {" "}
@@ -172,78 +169,95 @@ const Index = () => {
                   {labData?.labData?.map((val) => (
                     <>
                       <div className="mt-5">
-                        <span className='mx-7 text-lg text-semibold'>
-                          Test  Name:  {val.testName}
+                        <span className="mx-7 text-lg text-semibold">
+                          Test Name: {val.testName}
                         </span>
                         <br />
 
-                        {val.url !== "" && <span className="text-bold  mx-7"> File Attached: {val.fileName}</span>}
+                        {val.url !== "" && (
+                          <span className="text-bold  mx-7">
+                            {" "}
+                            File Attached: {val.fileName}
+                          </span>
+                        )}
 
-                        {val.values.length !== 0 &&
-                          <table key={val.testName} className="table w-full mt-4">
+                        {val.values.length !== 0 && (
+                          <table
+                            key={val.testName}
+                            className="table w-full mt-4"
+                          >
                             <thead className="text-center text-lg">
-
                               <tr>
-                                <th className="text-center text-lg">Property</th>
+                                <th className="text-center text-lg">
+                                  Property
+                                </th>
                                 <th className="text-center text-lg">Value</th>
-                                <th className="text-center text-lg">Normal Value</th>
+                                <th className="text-center text-lg">
+                                  Normal Value
+                                </th>
                               </tr>
                             </thead>
 
                             <tbody>
-                              {
-                                val.values.map((prop) => (
-                                  <tr className=" hover:bg-slate-200 text-center" key={val.testName}>
-                                    <td className=" hover:bg-slate-200">{prop.property} </td>
-                                    <td className=" hover:bg-slate-200">{prop.value}</td>
-                                    <td className=" hover:bg-slate-200">{prop.normalValue}</td>
-
-                                  </tr>
-                                ))
-                              }
+                              {val.values.map((prop) => (
+                                <tr
+                                  className=" hover:bg-slate-200 text-center"
+                                  key={val.testName}
+                                >
+                                  <td className=" hover:bg-slate-200">
+                                    {prop.property}{" "}
+                                  </td>
+                                  <td className=" hover:bg-slate-200">
+                                    {prop.value}
+                                  </td>
+                                  <td className=" hover:bg-slate-200">
+                                    {prop.normalValue}
+                                  </td>
+                                </tr>
+                              ))}
                             </tbody>
-                          </table>}
-
+                          </table>
+                        )}
                       </div>
                     </>
-                  ))
-                  }
+                  ))}
                 </div>
-
               </div>
 
-              <LabData addToLab={addToLab} dataId={recentPresData?.id}></LabData>
-
-
+              <LabData
+                addToLab={addToLab}
+                dataId={recentPresData?.id}
+              ></LabData>
             </>
-
-
-          }
-
+          )}
         </div>
-        {recentPresData?.investigation &&
+        {recentPresData?.investigation && (
           <div className=" w-3/5 ml-44 mt-5 ">
             <span className="border-b-2 border-gray-400  text-3xl font-semibold">
               {" "}
               Investigation :{" "}
             </span>
             <ol className="list-decimal m-3">
-
               {recentPresData?.investigation?.map((inv: string) => (
                 <li key={inv}>
                   <span className="p-2  text-lg">{inv} </span>
-                </li>))}
-
+                </li>
+              ))}
             </ol>
             <div className="mt-44">
-              {
-                labData !== initialLabData ? (
-                  <button onClick={updateReport} className="btn btn-success  text-white">Submit Report</button>) : (<></>)}
+              {labData !== initialLabData ? (
+                <button
+                  onClick={updateReport}
+                  className="btn btn-success  text-white"
+                >
+                  Submit Report
+                </button>
+              ) : (
+                <></>
+              )}
             </div>
           </div>
-        }
-
-
+        )}
       </div>
     </>
   );

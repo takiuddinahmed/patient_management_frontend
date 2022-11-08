@@ -1,4 +1,4 @@
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -25,12 +25,18 @@ const Index = () => {
   useEffect(() => {
     if (router.isReady) {
       const { patientId } = router.query;
-      const user = users.filter((u) => u.cardId == patientId);
-      if (user.length) {
-        setPatient(user[0]);
-      } else setPatient(users[0]);
+      const colRefDoc = collection(db, "users");
 
-      console.log(users[0]);
+      const getUser = async () => {
+        const users = await getDocs(
+          query(colRefDoc, where("uid", "==", patientId))
+        );
+        users.forEach((user) => {
+          const data = user.data();
+          setPatient(data);
+        });
+      };
+      getUser();
     }
   }, [router]);
 
@@ -65,7 +71,6 @@ const Index = () => {
       <div className="grid grid-cols-3 gap-4">
         <div className="ml-5">
           <div className="mt-2  text-2xl text-cyan-700">
-
             {recentPresData?.doctorFirstName} {recentPresData?.doctorLastName}
           </div>
 
@@ -94,16 +99,17 @@ const Index = () => {
               }}
             >
               <a className="no-underline hover:underline">Past Reports</a>
-            </Link> <br />
-            <Link href={{
-              pathname: "/patient/reportlists/[patientId]",
-              query: {
-                patientId: router.query.patientId
-              }
-            }}>
-              <a className="no-underline hover:underline">
-                Reports Lists
-              </a>
+            </Link>{" "}
+            <br />
+            <Link
+              href={{
+                pathname: "/patient/reportlists/[patientId]",
+                query: {
+                  patientId: router.query.patientId,
+                },
+              }}
+            >
+              <a className="no-underline hover:underline">Reports Lists</a>
             </Link>
           </div>
           <div className="my-2">
@@ -198,76 +204,80 @@ const Index = () => {
               ))}
             </ul>
           </div>
-          {recentPresData?.testResults?.labData &&
+          {recentPresData?.testResults?.labData && (
             <div className="mt-10 mx-3 col-start-1 col-end-7">
               <span className="border-b-2 border-gray-400  font-semibold">
                 Test Results:{" "}
               </span>
 
-
               <div>
                 {recentPresData?.testResults?.labData?.map((val: any) => (
                   <>
                     <div className="mt-3">
-
-
-                      {val.values.length !== 0 &&
-
+                      {val.values.length !== 0 && (
                         <>
-                          <span className='mx-7 my-3 text-xl text-bold'>
-                            Test  Name:  {val.testName}
+                          <span className="mx-7 my-3 text-xl text-bold">
+                            Test Name: {val.testName}
                           </span>
-                          <table key={val.testName} className="table w-full mt-4">
+                          <table
+                            key={val.testName}
+                            className="table w-full mt-4"
+                          >
                             <thead className="text-center text-lg">
-
                               <tr>
-                                <th className="text-center text-lg">Property</th>
+                                <th className="text-center text-lg">
+                                  Property
+                                </th>
                                 <th className="text-center text-lg">Value</th>
-                                <th className="text-center text-lg">Normal Value</th>
+                                <th className="text-center text-lg">
+                                  Normal Value
+                                </th>
                               </tr>
                             </thead>
 
                             <tbody>
-                              {
-                                val.values.map((prop: any) => (
-                                  <tr className=" hover:bg-slate-200 text-center" key={val.testName}>
-                                    <td className=" hover:bg-slate-200">{prop.property} </td>
-                                    <td className=" hover:bg-slate-200">{prop.value}</td>
-                                    <td className=" hover:bg-slate-200">{prop.normalValue}</td>
-
-                                  </tr>
-                                ))
-                              }
+                              {val.values.map((prop: any) => (
+                                <tr
+                                  className=" hover:bg-slate-200 text-center"
+                                  key={val.testName}
+                                >
+                                  <td className=" hover:bg-slate-200">
+                                    {prop.property}{" "}
+                                  </td>
+                                  <td className=" hover:bg-slate-200">
+                                    {prop.value}
+                                  </td>
+                                  <td className=" hover:bg-slate-200">
+                                    {prop.normalValue}
+                                  </td>
+                                </tr>
+                              ))}
                             </tbody>
-                          </table> </>}
-
+                          </table>{" "}
+                        </>
+                      )}
                     </div>
-
                   </>
-                ))
-                }
+                ))}
               </div>
               {recentPresData?.testResults?.labData?.map((val: any) => (
                 <>
-
-                  {
-                    val.url !== "" &&
-                    <div className='my-5 mx-44'>
-                      <span className='mx-7 my-3 text-xl text-bold'>
-                        Test  Name:  {val.testName}
+                  {val.url !== "" && (
+                    <div className="my-5 mx-44">
+                      <span className="mx-7 my-3 text-xl text-bold">
+                        Test Name: {val.testName}
                       </span>
-                      <img style={{ height: '700px', width: '500px' }} src={val.url} alt="" />
-
+                      <img
+                        style={{ height: "700px", width: "500px" }}
+                        src={val.url}
+                        alt=""
+                      />
                     </div>
-
-                  }
+                  )}
                 </>
-
               ))}
             </div>
-
-          }
-
+          )}
         </div>
       </div>
     </>
